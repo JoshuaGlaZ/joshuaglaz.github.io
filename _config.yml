@@ -22,11 +22,11 @@ author: © Joshua Daniel Talahatu
 ###############################################
 
 navbar-links:
+  GSoC: ""
   About Me: "aboutme"
   # Resources:
   #   - Beautiful Jekyll: "https://beautifuljekyll.com"
   #   - Learn markdown: "https://www.markdowntutorial.com/"
-  GSoC: ""
   # Blog: "https://deanattali.com"
 
 ################
