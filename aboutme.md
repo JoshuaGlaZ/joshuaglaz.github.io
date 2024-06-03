@@ -13,5 +13,5 @@ Hi, My name is Joshua Daniel Talahatu.
   
 > People don't change unless they undergo a significant amount of self-reflection or are forced to by circumstances.
 
-{: .box-warning}
-**Warning:** automating may lead to uncontrollable efficiency.
+{: .box-error}
+**Warning:** Automating tasks may lead to a uncontrollable urge to automate everything.
