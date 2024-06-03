@@ -22,7 +22,7 @@ author: © Joshua Daniel Talahatu
 ###############################################
 
 navbar-links:
-  GSoC: ""
+  GSoC: "index.html"
   About Me: "aboutme"
   # Resources:
   #   - Beautiful Jekyll: "https://beautifuljekyll.com"
