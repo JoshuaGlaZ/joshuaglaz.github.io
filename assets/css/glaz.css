@@ -1,41 +1,32 @@
-/* Landing page */
-.landing-page {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 60px 20px;
-}
-
-/* About section */
-.about-section {
-  max-width: 600px;
-  margin: 40px auto;
-}
-
-/* Progress section  */
-.progress-section {
-  margin-top: 60px;
-}
-
-.progress-remote {
-  margin: 2rem auto;
-  max-width: 700px;
-}
-
-.progress-remote.markdown-body {
+pre[class*="language-"],
+pre {
+  background-color: #f6f8fa;
+  border: 1px solid #d1d5da;
+  border-radius: 6px;
+  padding: 16px;
+  overflow-x: auto;
   font-family: Consolas, Menlo, monospace;
   font-size: 14px;
   line-height: 1.5;
   color: #24292e;
-  background: #fff;
-  padding: 16px;
-  border-radius: 6px;
-  border: 1px solid #d1d5da;
-  overflow-x: auto;
+  margin: 1rem 0;
 }
 
-/* Dark Mode */
-.dark-mode .progress-remote.markdown-body {
+code {
+  background-color: rgba(27,31,35,.05);
+  padding: .2em .4em;
+  margin: 0;
+  font-size: 85%;
+  border-radius: 3px;
+}
+
+.dark-mode pre[class*="language-"],
+.dark-mode pre {
   background-color: #2d2d2d;
   border-color: #444;
   color: #ddd;
+}
+.dark-mode code {
+  background-color: rgba(255,255,255,.1);
+  color: #e6e6e6;
 }
