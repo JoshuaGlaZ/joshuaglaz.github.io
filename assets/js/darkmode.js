@@ -1,8 +1,16 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const toggle = document.getElementById('dark-mode-toggle');
-  const icon = document.getElementById('dark-icon');
-  toggle.addEventListener('click', () => {
-    document.body.classList.toggle('dark-mode');
-    icon.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+(function() {
+  const btn = document.getElementById('dark-mode-toggle');
+  const storeKey = 'jekyll-dark-mode';
+
+  // Apply saved preference on load
+  const darkModeOn = localStorage.getItem(storeKey) === 'on';
+  document.body.classList.toggle('dark-mode', darkModeOn);
+  btn.textContent = darkModeOn ? '☀️' : '🌙';
+
+  // Click handler
+  btn.addEventListener('click', () => {
+    const isDark = document.body.classList.toggle('dark-mode');
+    localStorage.setItem(storeKey, isDark ? 'on' : 'off');
+    btn.textContent = isDark ? '☀️' : '🌙';
   });
-});
+})();

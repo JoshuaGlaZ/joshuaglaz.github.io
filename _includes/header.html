@@ -16,12 +16,6 @@
   ></div>
 {% endif %}
 
-{% if page.url == "/" %}
-  <style>
-    .navbar .avatar { display: none !important; }
-  </style>
-{% endif %}
-
 <header class="header-section {% if page.cover-img %}has-img{% endif %}">
 <div class="intro-header {% if page.cover-img %} big-img {% endif %}">
   {% if page.cover-img or page.title %}
@@ -55,6 +49,9 @@
             {% endif %}
           {% endif %}
         </div>
+        <button id="dark-mode-toggle" aria-label="Toggle dark mode">
++          🌙
++        </button>
       </div>
     </div>
   </div>
