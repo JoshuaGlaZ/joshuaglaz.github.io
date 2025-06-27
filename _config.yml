@@ -23,8 +23,8 @@ author: © Joshua Daniel Talahatu
 
 navbar-links:
   Home: "/"
-  Portfolio: "/portfolio.html"
-  GSoC Report: "/gsoc.html"
+  Portfolio: "/portfolio/"
+  GSoC Report: "/gsoc/"
   # Resources:
   #   - Beautiful Jekyll: "https://beautifuljekyll.com"
   #   - Learn markdown: "https://www.markdowntutorial.com/"

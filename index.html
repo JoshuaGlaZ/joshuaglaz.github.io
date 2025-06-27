@@ -5,30 +5,34 @@ title: "Home"
 
 <div class="landing-page">
 
-  <!-- Profile Picture -->
-  <div class="profile-circle">
-    <img src="{{ site.avatar }}" alt="Profile Picture">
-  </div>
+  <!-- PROFILE SECTION  -->
+  <section class="profile-section">
+    <img src="{{ site.avatar }}" alt="Avatar" class="avatar">
+    <h1>{{ site.title }}</h1>
+    <p>{{ site.description }}</p>
+  </section>
 
-  <!-- About Section -->
+  <!-- ABOUT SECTION -->
   <section class="about-section">
-    <h1>Hi, I'm Joshua Daniel Talahatu</h1>
-    <p>
-      - A second year at Universitas Surabaya studying Informatics Engineering 💻<br>
-      - A backend developer with Hapi.js, Django, .NET ⚙️<br>
-      - A CI/CD & Automation enthusiast 🤖<br>
-      - A coffee enjoyer ☕
-    </p>
-    <blockquote>
-      People don't change unless they undergo a significant amount of self-reflection or are forced to by circumstances.
-    </blockquote>
-    <div class="warning">
-      ⚠️ <strong>Warning:</strong> Automating tasks may lead to an uncontrollable urge to automate everything.
+    <h2>Tentang Saya</h2>
+    <p>Mahasiswa Teknik Informatika Universitas Surabaya yang sedang fokus pada AI & Backend Engineering.</p>
+  </section>
+
+  <!-- PROGRESS SECTION -->
+  <section class="progress-section">
+    <h2>Progress ASCII Art</h2>
+    <div class="progress-remote markdown-body">
+      <pre><code>
+'     ___       __      ___    ______    
+'   /'___`\   /'__`\  /'___`\ /\  ___\   
+'  /\_\ /\ \ /\ \/\ \/\_\ /\ \\ \ \__/      ▛▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+'  \/_/// /__\ \ \ \ \/_/// /__\ \___``\      ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░ 48.68%
+'     // /_\ \\ \ \_\ \ // /_\ \\/\ \L\ \   ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▞
+'    /\______/ \ \____//\______/ \ \____/
+'    \/_____/   \/___/ \/_____/   \/___/ 
+'                                                                         📢 Updated on Fri, 27 Jun 2025 16:12:10 UTC 
+      </code></pre>
     </div>
   </section>
 
-  <!-- ASCII Year -->
-  <section class="progress-remote markdown-body">
-    {% include progress.txt %}
-  </section>
 </div>
