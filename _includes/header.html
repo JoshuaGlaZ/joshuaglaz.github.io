@@ -37,6 +37,8 @@
             {% if page.author %}
               By <strong>{{ page.author | strip_html }}</strong><br>
             {% endif%}
+            <button id="dark-mode-toggle" aria-label="Toggle dark mode">🌙</button>
+
             <span class="post-meta">Posted on {{ page.date | date: date_format }}</span>
             {% if page.last-updated %}
               <span class="post-meta">
@@ -49,9 +51,6 @@
             {% endif %}
           {% endif %}
         </div>
-        <button id="dark-mode-toggle" aria-label="Toggle dark mode">
-+          🌙
-+        </button>
       </div>
     </div>
   </div>

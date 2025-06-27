@@ -61,3 +61,29 @@
 .dark-mode .snippet-clipboard-content .ClipboardButton {
   filter: invert(1);
 }
+
+#dark-mode-toggle {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+
+:root {
+  --code-bg: #f6f8fa;
+  --code-border: #d1d5da;
+  --code-fg: #24292e;
+}
+
+/* — override for dark mode — */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --code-bg: #2d2d2d;
+    --code-border: #444;
+    --code-fg: #c9d1d9;
+  }
+}
