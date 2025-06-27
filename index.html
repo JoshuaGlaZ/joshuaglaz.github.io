@@ -27,17 +27,8 @@ title: "Home"
     </div>
   </section>
 
-  <!-- Progress Card -->
-  <section class="progress-section">
-    {% include progresscard.html
-       title="2025 Progress"
-       percent=progress_percentage
-       color="#4caf50"
-       description="Progress Bar Tahun Ini." %}
-  </section>
-
-  <!-- ASCII Progress dari CI -->
+  <!-- ASCII Year -->
   <section class="progress-remote markdown-body">
-    {% include_file "https://raw.githubusercontent.com/JoshuaGlaZ/JoshuaGlaZ/main/README.md" snippet="progress" %}
+    {% include_file "https://raw.githubusercontent.com/JoshuaGlaZ/JoshuaGlaZ/blob/main/README.md" snippet="progress" %}
   </section>
 </div>
