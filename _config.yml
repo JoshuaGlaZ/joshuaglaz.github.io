@@ -309,7 +309,6 @@ exclude:
 plugins:
   - jekyll-paginate
   - jekyll-sitemap
-  - jekyll-remote-include
   - jekyll_include_plugin
 
 # Beautiful Jekyll / Dean Attali

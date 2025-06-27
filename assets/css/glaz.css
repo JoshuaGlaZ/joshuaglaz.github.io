@@ -1,35 +1,14 @@
 /* Landing Page Styling */
-.landing-page {
-  text-align: center;
-  padding: 60px 20px;
-}
+.landing-page { text-align:center; padding:60px 20px; }
+.profile-circle img { width:150px; height:150px; border-radius:50%; border:3px solid #ccc; object-fit:cover; margin: auto; }
+.about-section { max-width:600px; margin:20px auto; }
+.box-error { color:#b00020; background:#ffe5e5; padding:10px; border-radius:8px; display:inline-block; margin-top:10px; }
+.progress-section { margin-top:40px; }
+.progress-remote { margin:2rem auto; max-width:700px; }
+.markdown-body { font-family: Consolas,Menlo,monospace; font-size:14px; line-height:1.5; color:#24292e; background:#fff; }
+.markdown-body pre { background:#f6f8fa; padding:16px; border-radius:6px; border:1px solid #d1d5da; overflow:auto; }
 
-.profile-circle {
-  margin: 20px auto;
-}
-
-.profile-circle img {
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  border: 3px solid #ccc;
-  object-fit: cover;
-}
-
-.about-section {
-  max-width: 600px;
-  margin: 20px auto;
-}
-
-.warning {
-  color: #b00020;
-  background: #ffe5e5;
-  padding: 10px;
-  border-radius: 8px;
-  display: inline-block;
-  margin-top: 10px;
-}
-
-.progress-section {
-  margin-top: 40px;
-}
+/* Dark Mode */
+.dark-mode { background-color: #121212; color: #e0e0e0; }
+.dark-mode .progress-card { border-color: #444; background-color: #1e1e1e; }
+.dark-mode .markdown-body pre { background-color: #2d2d2d; border-color: #444; }

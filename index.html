@@ -7,7 +7,7 @@ title: "Home"
 
   <!-- Profile Picture -->
   <div class="profile-circle">
-    <img src="{{ site.baseurl }}/assets/img/profile.png" alt="Profile Picture">
+    <img src="{{ site.avatar }}" alt="Profile Picture">
   </div>
 
   <!-- About Section -->
@@ -27,13 +27,17 @@ title: "Home"
     </div>
   </section>
 
-  <!-- Progress Bar -->
+  <!-- Progress Card -->
   <section class="progress-section">
     {% include progresscard.html
-      title="2025 Progress"
-      percent=60
-      color="#4caf50"
-      description="Progress pencapaian tahunan hingga saat ini." %}
+       title="2025 Progress"
+       percent=progress_percentage
+       color="#4caf50"
+       description="Progress Bar Tahun Ini." %}
   </section>
 
+  <!-- ASCII Progress dari CI -->
+  <section class="progress-remote markdown-body">
+    {% include_file "https://raw.githubusercontent.com/JoshuaGlaZ/JoshuaGlaZ/main/README.md" snippet="progress" %}
+  </section>
 </div>
