@@ -3,17 +3,7 @@ layout: default
 title: "Home"
 ---
 
-<!-- PROFILE (gunakan styling default tema) -->
-# {{ site.title }}
-
-![Avatar]({{ site.avatar }}){: .avatar }
-
-{{ site.description }}
-
----
-
 <!-- ABOUT -->
-## Tentang Saya {: .about-section }
 
 Hi, My name is Joshua Daniel Talahatu.
 
@@ -23,14 +13,14 @@ Hi, My name is Joshua Daniel Talahatu.
 - a coffee enjoyer ☕
 
 > People don't change unless they undergo a significant amount of self-reflection or are forced to by circumstances.  
-{: .box-error }
 
-**Warning:** Automating tasks may lead to an uncontrollable urge to automate everything.
+
+{: .box-error}
+**Warning:** Automating tasks may lead to a uncontrollable urge to automate everything.
 
 ---
 
 <!-- PROGRESS ASCII ART -->
-## Progress ASCII Art {: .progress-section }
 
 ```text
 '     ___       __      ___    ______    
