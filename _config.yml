@@ -22,8 +22,9 @@ author: © Joshua Daniel Talahatu
 ###############################################
 
 navbar-links:
-  GSoC: "https://joshuaglaz.github.io"
-  About Me: "aboutme"
+  Home: "/"
+  Portfolio: "/portfolio/"
+  GSoC Report: "/gsoc/"
   # Resources:
   #   - Beautiful Jekyll: "https://beautifuljekyll.com"
   #   - Learn markdown: "https://www.markdowntutorial.com/"
@@ -63,7 +64,7 @@ social-network-links:
 #  medium: yourname
 #  reddit: yourname
   linkedin: joshua-daniel-talahatu
-  whatsapp: 082238825781
+  whatsapp: 089526383030
 #  xing: yourname
 #  stackoverflow: "3943160/daattali"
 #  snapchat: deanat78
@@ -168,6 +169,11 @@ footer-hover-col: "#279EFF"
 # If you have common JavaScript files that should be included in every page, list them here
 #site-js:
 #  - "/assets/js/custom-script.js"
+
+site-css:
+  - "/assets/css/custom-styles.css"
+site-js:
+  - "/assets/js/darkmode.js"
 
 #################################
 # --- Web Analytics Section --- #
