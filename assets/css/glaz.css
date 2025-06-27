@@ -1,46 +1,63 @@
-pre[class*="language-"],
-pre {
+.snippet-clipboard-content {
+  position: relative;
+  margin: 1.5rem 0;
   background-color: #f6f8fa;
   border: 1px solid #d1d5da;
   border-radius: 6px;
+  overflow: auto;
+}
+
+.snippet-clipboard-content pre {
+  margin: 0;
   padding: 16px;
-  overflow-x: auto;
   font-family: Consolas, Menlo, monospace;
   font-size: 14px;
-  line-height: 1.5;
+  line-height: 1.45;
   color: #24292e;
-  margin: 1rem 0;
+  background: transparent;
+  border: none;
+  overflow: auto;
+  white-space: pre-wrap;
 }
 
-code {
-  background-color: rgba(27,31,35,.05);
-  padding: .2em .4em;
-  margin: 0;
-  font-size: 85%;
-  border-radius: 3px;
+.snippet-clipboard-content code {
+  background: none;
+  padding: 0;
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
 }
 
-.dark-mode pre[class*="language-"],
-.dark-mode pre {
-  background-color: #2d2d2d;
-  border-color: #444;
-  color: #ddd;
-}
-.dark-mode code {
-  background-color: rgba(255,255,255,.1);
-  color: #e6e6e6;
-}
-
-#dark-mode-toggle {
+.snippet-clipboard-content .clipboard-copy,
+.snippet-clipboard-content .ClipboardButton {
+  position: absolute;
+  top: 8px;
+  right: 8px;
   background: none;
   border: none;
-  font-size: 1.5rem;
+  padding: 4px;
   cursor: pointer;
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  transition: transform .2s;
+  opacity: 0.6;
+  transition: opacity 0.2s, transform 0.2s;
 }
-#dark-mode-toggle:hover {
-  transform: scale(1.2);
+.snippet-clipboard-content .clipboard-copy:hover,
+.snippet-clipboard-content .ClipboardButton:hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+.snippet-clipboard-content .js-clipboard-check-icon {
+  display: none;
+}
+
+.dark-mode .snippet-clipboard-content {
+  background-color: #2d2d2d;
+  border-color: #444;
+}
+.dark-mode .snippet-clipboard-content pre {
+  color: #c9d1d9;
+}
+.dark-mode .snippet-clipboard-content .clipboard-copy,
+.dark-mode .snippet-clipboard-content .ClipboardButton {
+  filter: invert(1);
 }
