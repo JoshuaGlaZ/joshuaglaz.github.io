@@ -33,7 +33,7 @@ I am an Informatics Engineering student at the University of Surabaya, passionat
 
 ### 1. AIRA (ML Piano Performance Analyzer)
 
-A backend and ML service that analyzes user-uploaded MIDI files to classify four types of piano performance mistakes by comparing against ideal reference tracks. Custom synthetic dataset is generated based on "Twinkle Twinkle Little Star" melody to train and simulate piano mistake recognition. Methods are inspired outlined in the [paper](https://smcnetwork.org/smc2024/papers/SMC2024_paper_id171.pdf_) and are applied to identify and correct musical mistakes.
+A backend and ML service that analyzes user-uploaded MIDI files to classify four types of piano performance mistakes by comparing against ideal reference tracks. Custom synthetic dataset is generated based on "Twinkle Twinkle Little Star" melody to train and simulate piano mistake recognition. Methods are inspired outlined in the [paper](https://smcnetwork.org/smc2024/papers/SMC2024_paper_id171.pdf){:target="_blank"} and are applied to identify and correct musical mistakes.
 - **Tech Stack:** Tensorflow, Flask Framework, Firebase, GCP
 - **Highlight:** Dataset generation, MIDI conversion, audio feature extraction, CI/CD
 - [Org GitHub Repo](https://github.com/TCHWG){:target="_blank"}
