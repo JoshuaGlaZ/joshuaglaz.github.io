@@ -1,5 +1,39 @@
 ---
-layout: home
-title: Google Summer of Code 2024
-subtitle: Blog & Report Progress for Google Summer of Code 2024 on the project of noWorkFlow
+layout: default
+title: "Home"
 ---
+
+<div class="landing-page">
+
+  <!-- Profile Picture -->
+  <div class="profile-circle">
+    <img src="{{ site.baseurl }}/assets/img/profile.png" alt="Profile Picture">
+  </div>
+
+  <!-- About Section -->
+  <section class="about-section">
+    <h1>Hi, I'm Joshua Daniel Talahatu</h1>
+    <p>
+      - A second year at Universitas Surabaya studying Informatics Engineering 💻<br>
+      - A backend developer with Hapi.js, Django, .NET ⚙️<br>
+      - A CI/CD & Automation enthusiast 🤖<br>
+      - A coffee enjoyer ☕
+    </p>
+    <blockquote>
+      People don't change unless they undergo a significant amount of self-reflection or are forced to by circumstances.
+    </blockquote>
+    <div class="warning">
+      ⚠️ <strong>Warning:</strong> Automating tasks may lead to an uncontrollable urge to automate everything.
+    </div>
+  </section>
+
+  <!-- Progress Bar -->
+  <section class="progress-section">
+    {% include components/progresscard.html
+      title="2025 Progress"
+      percent=60
+      color="#4caf50"
+      description="Progress pencapaian tahunan hingga saat ini." %}
+  </section>
+
+</div>
