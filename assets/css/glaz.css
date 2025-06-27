@@ -1,3 +1,35 @@
-.progress-card { padding:1rem; border:1px solid #ccc; border-radius:8px; margin:1rem 0; }
-.progress-container { background:#f1f1f1; border-radius:4px; overflow:hidden; }
-.progress-bar { color:#fff; padding:0.5rem; text-align:right; }
+/* Landing Page Styling */
+.landing-page {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.profile-circle {
+  margin: 20px auto;
+}
+
+.profile-circle img {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  border: 3px solid #ccc;
+  object-fit: cover;
+}
+
+.about-section {
+  max-width: 600px;
+  margin: 20px auto;
+}
+
+.warning {
+  color: #b00020;
+  background: #ffe5e5;
+  padding: 10px;
+  border-radius: 8px;
+  display: inline-block;
+  margin-top: 10px;
+}
+
+.progress-section {
+  margin-top: 40px;
+}
