@@ -1,0 +1,26 @@
+---
+title: "bankpy"
+description: A secure banking information system with integrated data protection, multi-factor authentication, and robust cryptography, built using Django.
+repository: JoshuaGlaZ/bankpy
+date: "2024-08-22"
+published: true
+---
+
+bankpy is a secure banking information system designed to protect sensitive customer data and ensure safe financial transactions. Built with Django, it implements layered security measures to address modern banking threats while providing comprehensive banking functionality.
+
+###### Key Features
+- **Data encryption**: Sensitive customer data is encrypted at rest and in transit using industry-standard cryptography (Fernet/AES).
+- **Multi-factor authentication (2FA)**: Supports TOTP-based 2FA for all privileged users.
+- **Role-based access control (RBAC)**: Fine-grained permissions for customers, tellers, and managers.
+- **Digital signatures**: Ensures transaction authenticity and non-repudiation using RSA signatures.
+- **Comprehensive audit logging**: Tracks all critical actions for security and compliance.
+- **Secure transaction processing**: Validates and signs all financial operations.
+
+###### Architecture & Security
+- Built on Django MVC architecture for clear separation of concerns.
+- Custom encrypted fields for automatic data protection in the database.
+- All authentication and authorization flows are protected by layered security checks.
+- Follows best practices for key management and cryptographic operations.
+
+###### Usage
+See the [bankpy repository](https://github.com/JoshuaGlaZ/bankpy) for setup instructions, code, and documentation.

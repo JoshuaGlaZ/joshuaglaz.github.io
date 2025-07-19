@@ -1,0 +1,139 @@
+---
+title: "Refining Node Labels and AST Integration"
+week: 11
+date: "2024-08-16"
+description: "Enhanced node label emphasis in graph visualization and revisited AST integration for better alignment with project goals."
+tags: ["gsoc", "week11"]
+---
+
+# Node Type Emphasis
+
+This week, I focused on refining the node labels in the graph visualization. 
+The primary change was to emphasize the node types by applying bold formatting, making it easier to distinguish between different types at a glance.
+
+Here's the updated code:
+
+```diff
+    // Text for new nodes
+    nodeEnter.append('text')
+      .attr("dy", ".35em")
+      .attr("font-family", "sans-serif")
+      .attr("font-size", this.config.fontSize + "px")
+      .attr("pointer-events", "none")
+      .attr("fill", "#000")
+      .attr("y", 24)
+      .attr("x", 10)
+      .attr("text-anchor", "middle")
+      .each(function(d: VisibleTrialNode) {
+        const textLabel = d3_select(this);
+        const name = d.data.name.split('<br/>');
+        if (name.length > 1) {
+          textLabel.append("tspan")
+            .attr("x", "10")
+            .attr("dy", ".35em")
++           .attr("font-weight", "bold")
+            .text(name[0]);
+          textLabel.append("tspan")
+            .attr("x", "10")
+            .attr("dy", "1em")
+            .text(name[1]);
+          textLabel.attr("class", "nowrap")
+        } else {
+          return textLabel.text(d.data.name);
+        }
+      });
+
+```
+
+With this change, the node labels are more visually distinct:
+
+![Definition Graph with Bold Type](../graph_node_bold-type.png "Definition Graph with Bold Type")
+
+# Revisiting the AST
+
+During Weeks 3-6, I worked on integrating the trial's Abstract Syntax Tree (AST), now referred to as the Definition AST, with the noWorkflow system. This week, I revisited that work to ensure it's fully aligned with the project's requirements.
+
+```diff
+- class DefinitionAst:
+-     def __init__(self):
++ class DefinitionAst:
++     def __init__(self, trial):
++        self.trial = weakref.proxy(trial)
+         self.components = self.code_component_definition()
+         self.compositions = self.composition_definition()
+         self.def_dict = self.label_def()
+         self.node_dict = {}
+
+     def code_component_definition(self):
+         """Return a code component definition"""
+         return relational.session.query(CodeComponent.m).filter((
+-            (CodeComponent.m.trial_id == self.id) &
++            (CodeComponent.m.trial_id == self.trial.trial.id) &
+             (CodeComponent.m.type != "syntax")
+         )).all()
+
+     def composition_definition(self):
+         """Return a composition definition"""
+         return relational.session.query(Composition.m).filter((
+-            (Composition.m.trial_id == self.id) &
++            (Composition.m.trial_id == self.trial.trial.id) &
+             (Composition.m.type != '*op_pos')
+         )).all()
+
+     def label_def(self):
+         "Return the label needed for the trial's definition multi-name node."
+         def_id = relational.session.query(CodeComponent.m.id).join(
+             Composition.m,
+             (CodeComponent.m.id == Composition.m.part_id) &
+             (CodeComponent.m.trial_id == Composition.m.trial_id)
+         ).filter(
+-            (CodeComponent.m.trial_id == self.id) &
++            (CodeComponent.m.trial_id == self.trial.trial.id) &
+             (CodeComponent.m.type == 'function_def') | (
+                 CodeComponent.m.type == 'class_def')
+         ).subquery()
+
+         labels = relational.session.query(
+             ...
+         ).filter(
+             (CodeComponent.m.trial_id == self.trial.trial.id) &
+             (CodeComponent.m.type != 'syntax') &
+             Composition.m.whole_id.in_(def_id)
+         ).all()
+
+         ...
+
+     def __call__(self):
+         ...    
+   
+-        return self.node_dict[1]
++        ast_ = {
++            "ast": {self.trial.trial.id: ast.dump(ast.parse(self.node_dict[1]))},
++            "trial": self.trial.trial.id
++        }
++        return ast_
+```
+
+The trial AST isn't yet integrated into the now vis interface. However, I've set up a route to retrieve the trial definition and send the AST representation in JSON format. This groundwork will be useful for future development.
+
+```python
+@app.route("/definition/<trial_id>/ast.json")
+def definition_ast(trial_id):
+    """Respond trial definition as AST"""
+    trial = Definition(trial_id)
+    ast = trial.ast
+    return jsonify(ast())
+```
+
+```json
+{
+    "ast": {
+        "08ece614-f5ae-4e65-93a0-5a8b44ac9a44": "Module(body=[Import(names=[alias(name='numpy', asname='np')]), Import(names=[alias(name='matplotlib.pyplot', asname='plt')]), ImportFrom(module='precipitation', names=[alias(name='read'), alias(name='prepare')], level=0), FunctionDef(name='bar_graph', args=arguments(posonlyargs=[], args=[arg(arg='years')], kwonlyargs=[], kw_defaults=[], defaults=[]), body=[Global(names=['PREC', ' MONTHS']), Expr(value=Call(func=Name(id='prepare', ctx=Load()), args=[Name(id='PREC', ctx=Load()), Name(id='MONTHS', ctx=Load()), Name(id='years', ctx=Load()), Name(id='plt', ctx=Load())], keywords=[])), Expr(value=Call(func=Attribute(value=Name(id='plt', ctx=Load()), attr='savefig', ctx=Load()), args=[Constant(value='\"out.png\"')], keywords=[]))], decorator_list=[], type_params=[]), Assign(targets=[Name(id='MONTHS', ctx=Load())], value=BinOp(left=Call(func=Attribute(value=Name(id='np', ctx=Load()), attr='arange', ctx=Load()), args=[Constant(value='12')], keywords=[]), op=Add(), right=Constant(value='1'))), Assign(targets=[Tuple(elts=[Name(id='d13', ctx=Load()), Name(id='d14', ctx=Load())], ctx=Load())], value=Tuple(elts=[Call(func=Name(id='read', ctx=Load()), args=[Constant(value=\"'p13.dat'\")], keywords=[]), Call(func=Name(id='read', ctx=Load()), args=[Constant(value=\"'p14.dat'\")], keywords=[])], ctx=Load())), Assign(targets=[Name(id='PREC', ctx=Load()), Tuple(elts=[Name(id='prec13', ctx=Load()), Name(id='prec14', ctx=Load())], ctx=Load())], value=Tuple(elts=[List(elts=[], ctx=Load()), List(elts=[], ctx=Load())], ctx=Load())), For(target=Name(id='i', ctx=Load()), iter=Name(id='MONTHS', ctx=Load()), body=[Expr(value=Call(func=Attribute(value=Name(id='prec13', ctx=Load()), attr='append', ctx=Load()), args=[Call(func=Name(id='sum', ctx=Load()), args=[Subscript(value=Name(id='d13', ctx=Load()), slice=Name(id='i', ctx=Load()), ctx=Load())], keywords=[])], keywords=[])), Expr(value=Call(func=Attribute(value=Name(id='prec14', ctx=Load()), attr='append', ctx=Load()), args=[Call(func=Name(id='sum', ctx=Load()), args=[Subscript(value=Name(id='d14', ctx=Load()), slice=Name(id='i', ctx=Load()), ctx=Load())], keywords=[])], keywords=[]))], orelse=[]), Expr(value=Call(func=Name(id='bar_graph', ctx=Load()), args=[List(elts=[Constant(value=\"'2013'\"), Constant(value=\"'2014'\")], ctx=Load())], keywords=[]))], type_ignores=[])"
+    },
+    "trial": "08ece614-f5ae-4e65-93a0-5a8b44ac9a44"
+}
+```
+
+---
+
+This week has been crucial in fine-tuning the project, ensuring it's in top shape as I prepare for the final report in Week 12. I’m excited to wrap up the work and share the results with the community.
