@@ -10,8 +10,20 @@ interface GSoCPostPageProps {
   params: { slug: string };
 }
 
+function findPostBySlugOrWeek(slug: string) {
+  let post = allGSoCPosts.find(p => p.slug === slug);
+  if (post) return post;
+
+  if (/^\d+$/.test(slug)) {
+    const weekTag = `week${slug}`;
+    post = allGSoCPosts.find(p => Array.isArray(p.tags) && p.tags.includes(weekTag));
+    if (post) return post;
+  }
+  return null;
+}
+
 export default function GSoCPostPage({ params }: GSoCPostPageProps) {
-  const post = allGSoCPosts.find(p => p.slug === params.slug);
+  const post = findPostBySlugOrWeek(params.slug);
   if (!post) return notFound();
 
   const ref = useRef<HTMLElement>(null);
@@ -40,16 +52,7 @@ export default function GSoCPostPage({ params }: GSoCPostPageProps) {
         >
           <div className="container flex flex-row-reverse items-center justify-between p-6 mx-auto">
             <div className="flex justify-between gap-8">
-              <Link target="_blank" href="https://twitter.com/chronark_">
-                <Twitter
-                  className={`w-6 h-6 duration-200 hover:font-medium ${
-                    isIntersecting
-                      ? ' text-zinc-400 hover:text-zinc-100'
-                      : 'text-zinc-600 hover:text-zinc-900'
-                  }`}
-                />
-              </Link>
-              <Link target="_blank" href="https://github.com/chronark">
+              <Link target="_blank" href="https://github.com/joshuaglaz">
                 <Github
                   className={`w-6 h-6 duration-200 hover:font-medium ${
                     isIntersecting
@@ -94,7 +97,7 @@ export default function GSoCPostPage({ params }: GSoCPostPageProps) {
                 ) : (
                   <span>SOON</span>
                 )}
-                {`  |  Week ${post.week}`}
+                {post.week && `  |  Week ${post.week}`}
               </span>
             </div>
           </div>

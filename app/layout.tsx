@@ -4,60 +4,27 @@ import LocalFont from "@next/font/local";
 import { Metadata } from "next";
 import { Analytics } from "./components/analytics";
 import PageTransition from "./components/PageTransition";
-import type { Viewport } from 'next'
-import { Suspense } from "react";
-
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-  display: 'swap',
-  preload: true,
-});
-
-const calSans = LocalFont({
-  src: "../public/fonts/CalSans-SemiBold.ttf",
-  variable: "--font-calsans",
-  display: 'swap',
-  preload: true,
-});
-
-export const viewport: Viewport = {
-  width: 'device-width',
-  initialScale: 1,
-  maximumScale: 5,
-  themeColor: '#000000',
-};
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://yoursite.com'),
   title: {
-    default: "JoshuaGlaZ - Backend Developer & Software Engineer",
-    template: "%s | JoshuaGlaZ",
+    default: 'Joshua Daniel Talahatu | Backend Developer',
+    template: '%s | Joshua Daniel Talahatu'
   },
-  description: "Backend Developer, Software Engineer, and Google Summer of Code participant. Passionate about building scalable applications and contributing to open source.",
-  keywords: ["Joshua Daniel Talahatu", "Backend Developer", "Software Engineer", "GSOC", "Open Source"],
-  authors: [{ name: "Joshua Daniel Talahatu" }],
-  creator: "Joshua Daniel Talahatu",
+  description: 'Backend developer specializing in Node.js, Python, and cloud architecture',
   openGraph: {
-    title: "JoshuaGlaZ - Backend Developer & Software Engineer",
-    description: "Backend Developer, Software Engineer, and Google Summer of Code participant.",
-    url: "https://joshuaglaz.github.io",
-    siteName: "JoshuaGlaZ Portfolio",
+    type: 'website',
+    locale: 'en_US',
+    url: 'https://joshuaglaz.github.io',
+    siteName: 'Joshua Daniel Talahatu',
     images: [
       {
-        url: "https://joshuaglaz.github.io/og-image.png",
+        url: '/avatar-icon.jpg',
         width: 1200,
         height: 630,
-        alt: "JoshuaGlaZ Portfolio",
-      },
-    ],
-    locale: "en-US",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "JoshuaGlaZ - Backend Developer",
-    description: "Backend Developer, Software Engineer, and Google Summer of Code participant.",
-    images: ["https://joshuaglaz.github.io/og-image.png"],
+        alt: 'Joshua Daniel Talahatu - Backend Developer'
+      }
+    ]
   },
   robots: {
     index: true,
@@ -70,29 +37,16 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-  icons: {
-    icon: [
-      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
-      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
-    ],
-    apple: [
-      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
-    ],
-    shortcut: "/favicon.ico",
-  },
-  manifest: "/site.webmanifest",
 };
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+});
 
-function PageLoader() {
-  return (
-    <div className="flex items-center justify-center min-h-screen bg-black">
-      <div className="relative">
-        <div className="w-12 h-12 rounded-full border-4 border-zinc-800 border-t-zinc-400 animate-spin"></div>
-        <div className="absolute inset-0 w-12 h-12 rounded-full border-4 border-transparent border-t-zinc-600 animate-spin animation-delay-150"></div>
-      </div>
-    </div>
-  );
-}
+const calSans = LocalFont({
+  src: "../public/fonts/CalSans-SemiBold.ttf",
+  variable: "--font-calsans",
+});
 
 export default function RootLayout({
   children,
@@ -100,51 +54,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html
-      lang="en"
-      className={[inter.variable, calSans.variable].join(" ")}
-      suppressHydrationWarning
-    >
+    <html lang="en" className={[inter.variable, calSans.variable].join(" ")}>
       <head>
-        <Suspense>
-          <Analytics />
-        </Suspense>
-        {/* Preconnect to external domains */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-
-        {/* Preload critical resources */}
-        <link rel="preload" href="/fonts/CalSans-SemiBold.ttf" as="font" type="font/ttf" crossOrigin="anonymous" />
+        <Analytics />
       </head>
       <body
-        className={`bg-black antialiased ${process.env.NODE_ENV === "development" ? "debug-screens" : ""
-          }`}
-        suppressHydrationWarning
+        className={`bg-black ${process.env.NODE_ENV === "development" ? "debug-screens" : undefined}`}
       >
-        <Suspense fallback={<PageLoader />}>
-          <PageTransition>{children}</PageTransition>
-        </Suspense>
-
-        {/* Service Worker Registration */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              if ('serviceWorker' in navigator) {
-                window.addEventListener('load', function() {
-                  navigator.serviceWorker.register('/sw.js')
-                    .then(function(registration) {
-                      console.log('SW registered: ', registration);
-                    })
-                    .catch(function(registrationError) {
-                      console.log('SW registration failed: ', registrationError);
-                    });
-                });
-              }
-            `,
-          }}
-        />
+        <PageTransition>{children}</PageTransition>
       </body>
     </html>
   );
 }
-

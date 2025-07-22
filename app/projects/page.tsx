@@ -6,23 +6,26 @@ import { Card } from "../components/card";
 import { Article } from "./article";
 import { Redis } from "@upstash/redis";
 import { Eye } from "lucide-react";
+import dynamic from "next/dynamic";
+import { cacheManager } from "@/util/redis-cache";
 
-const redis = Redis.fromEnv();
+const ProjectSkeleton = dynamic(
+  () => import("../components/loading-skeleton").then(mod => mod.ProjectSkeleton),
+  { loading: () => <div className="p-4 animate-pulse bg-zinc-900/20" /> }
+);
 
 export const revalidate = 60;
 export default async function ProjectsPage() {
-  const views = (
-    await redis.mget<number[]>(
-      ...allProjects.map((p) => ["pageviews", "projects", p.slug].join(":")),
-    )
-  ).reduce((acc, v, i) => {
-    acc[allProjects[i].slug] = v ?? 0;
-    return acc;
-  }, {} as Record<string, number>);
+  const publishedProjects = allProjects.filter(p => p.published);
+  const views = await cacheManager.getMultipleViews(
+    publishedProjects.map(p => p.slug)
+  );
+
+  await cacheManager.warmCache(publishedProjects);
 
   const featured = allProjects.find((project) => project.slug === "noworkflow")!;
-  const top2 = allProjects.find((project) => project.slug === "bank_py")!;
-  const top3 = allProjects.find((project) => project.slug === "content_sim")!;
+  const top2 = allProjects.find((project) => project.slug === "aria")!;
+  const top3 = allProjects.find((project) => project.slug === "bank_py")!;
   const sorted = allProjects
     .filter((p) => p.published)
     .filter(

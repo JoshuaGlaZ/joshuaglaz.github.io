@@ -5,15 +5,43 @@ repository: JoshuaGlaZ/content-similarity
 date: "2025-01-14"
 published: true
 ---
+content-sim is a hybrid PHP/Python application that aggregates posts and tweets, computes keyword‑proximity scores, and surfaces the most contextually relevant results. It handles session management across multiple Instagram and Twitter accounts, supports headless scraping, and offers a web interface for interactive searches.
 
-content-sim is a web-based project for intelligent information retrieval. It scrapes social media and ranks results by keyword proximity, helping users find the most relevant content efficiently.
-
-###### Key Features
-- **Social media scraping**: Gathers data from multiple platforms.
-- **Keyword proximity ranking**: Ranks results based on how closely keywords appear together.
+- **Social media scraping**: Fetches content from Instagram, Twitter, and YouTube.
+- **Keyword-Proximity Ranking**: Ranks posts by closeness to user‑specified.
+- **Session Management**: Rotates authenticated cookies for large‑scale scrapes.
 - **Web-based interface**: Easy to use and accessible from any browser.
 - **Customizable queries**: Tailor your searches for specific needs.
 
-###### Usage
-See the [content-similarity repository](https://github.com/JoshuaGlaZ/content-similarity) for more details and documentation.
+## Screenshots
 
+![1](/content-sim1.png)
+![2](/content-sim2.png)
+![3](/content-sim3.png)
+
+## Installation
+
+```bash
+git clone https://github.com/JoshuaGlaZ/content-similarity.git
+cd content-similarity
+
+# PHP Server Setup
+composer install           # if you use Composer for dependencies
+# or ensure PHP v8+ is installed, start built‑in server:
+php -S localhost:8080 -t public/
+
+# Python Scraper Setup
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
+
+## Usage
+1. Start web server (php -S localhost:8080 -t public/).
+2. Launch scrapers as needed (fill in your social media credentials to avoid blocked):
+```bash
+python twitter_scrapper.py
+python ws-ig.py
+python youtube.py
+```
+3. Navigate to http://localhost:8080/ and enter search keywords to view results.

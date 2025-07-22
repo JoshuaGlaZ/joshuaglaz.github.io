@@ -5,6 +5,7 @@ import { Header } from "./header";
 import "./mdx.css";
 import { ReportView } from "./view";
 import { Redis } from "@upstash/redis";
+import { ScrollProgressBar } from "../../components/progress-bar";
 
 export const revalidate = 60;
 
@@ -16,9 +17,8 @@ type Props = {
 
 const redis = Redis.fromEnv();
 
-export async function generateStaticParams(): Promise<Props["params"][]> {
+export async function generateStaticParams() {
   return allProjects
-    .filter((p) => p.published)
     .map((p) => ({
       slug: p.slug,
     }));
@@ -37,6 +37,7 @@ export default async function PostPage({ params }: Props) {
 
   return (
     <div className="bg-zinc-50 min-h-screen">
+			<ScrollProgressBar />
       <Header project={project} views={views} />
       <ReportView slug={project.slug} />
 

@@ -1,0 +1,64 @@
+---
+title: "ARIA"
+description: An AI‑powered personal piano mentor that provides self‑learners with real‑time pitch and rhythm feedback, gamified practice, and progress tracking.
+repository: TCHWG
+date: "2024-08-22"
+published: true
+---
+
+AIRA is an AI‑powered piano mentor built by Team C242‑PS540 for the Bangkit Academy 2024 Capstone. By analyzing live audio or MIDI input, it automatically detects note and rhythm mistakes, delivers targeted feedback in under 300 ms, and motivates learners through a gamified progression system—no teacher required.
+
+- **Real‑Time Feedback**: Classifies Wrong Note, Missing Note, Extra Note, or No Error against reference MIDI with 92% accuracy.
+- **Gamified Practice**: Unlock chord challenges, earn badges, and track streaks to stay motivated.
+- **Cross‑Platform Android App**: Kotlin‑built mobile client that streams audio to cloud ML services.
+- **Scalable Serverless Backend**: Express.js APIs and Flask audio workers on Google Cloud (App Engine, Cloud Run) with Prisma/MySQL.
+
+## Screenshots
+
+**Practice Mode**
+
+![Practice Mode](/aria1.png)
+
+**Error Feedback Detail**
+
+![Error Feedback Detail](/aria2.png)
+
+## Installation
+
+Clone and set up each component:
+
+### Android App
+
+```bash
+git clone https://github.com/TCHWG/Android‑Development.git
+cd Android‑Development
+./gradlew assembleDebug
+```
+
+### Backend & API
+
+```bash
+git clone https://github.com/TCHWG/Backend‑AIRA.git
+cd Backend‑AIRA
+npm install
+cp .env.example .env   # fill in your Firebase, email, and Google Cloud creds
+npx prisma migrate dev
+npm start
+```
+
+### Machine Learning Model
+
+```bash
+git clone https://github.com/TCHWG/Machine‑Learning.git
+cd Machine‑Learning
+pip install -r requirements.txt
+python train_model.py   # trains the mistake‑classification model
+```
+
+## Usage
+
+1. Launch the Android app and sign up
+2. Connect to the backend URL in Settings
+3. Start a new practice session; AIRA listens via mic/MIDI
+4. Review instant feedback overlays and badges earned
+5. Check your weekly progress on the Dashboard screen
