@@ -31,7 +31,9 @@ jobs:
           check-latest: true
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: |
+          npm install -g pnpm
+          pnpm install --frozen-lockfile
 
       - name: Set Next.js to static export
         run: |
