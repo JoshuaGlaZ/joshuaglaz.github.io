@@ -7,6 +7,7 @@
     "build": "next build",
     "export": "next export",
     "start": "next start",
+    "deploy": "npm run build && npm run export",
     "fmt": "pnpm rome check . --apply-unsafe && pnpm rome format . --write",
     "analyze": "cross-env ANALYZE=true next build"
   },

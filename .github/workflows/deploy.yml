@@ -37,23 +37,21 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      - name: Build with Next.js
+        run: run deploy
+        env:
+          UPSTASH_REDIS_REST_URL: ${{ secrets.UPSTASH_REDIS_REST_URL }}
+          UPSTASH_REDIS_REST_TOKEN: ${{ secrets.UPSTASH_REDIS_REST_TOKEN }}
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
         with:
           static_export: true
 
-      - name: Build with Next.js
-        run: | 
-          pnpm build
-          pnpm export
-        env:
-          UPSTASH_REDIS_REST_URL: ${{ secrets.UPSTASH_REDIS_REST_URL }}
-          UPSTASH_REDIS_REST_TOKEN: ${{ secrets.UPSTASH_REDIS_REST_TOKEN }}
-
       - name: Upload static output
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./out
+          path: out
 
   deploy:
     environment:
