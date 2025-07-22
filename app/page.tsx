@@ -9,7 +9,7 @@ const Particles = dynamic(() => import("./components/particles"), { ssr: false }
 
 const navigation = [
   { name: "Projects", href: "/projects" },
-  { name: "GSOC", href: "/gsoc  " },
+  { name: "GSOC", href: "/gsoc" },
   { name: "Contact", href: "/contact" },
 ];
 

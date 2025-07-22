@@ -48,7 +48,7 @@ export const Project = defineDocumentType(() => ({
 
 export const GSoCPost = defineDocumentType(() => ({
 	name: "GSoCPost",
-	filePathPattern: "gsoc/**/*.mdx",
+	filePathPattern: "./gsoc/**/*.mdx",
 	contentType: "mdx",
 	fields: {
 		title: { type: "string", required: true },
