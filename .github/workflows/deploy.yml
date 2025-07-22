@@ -2,9 +2,9 @@ name: Deploy Next.js to GitHub Pages
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
   workflow_dispatch:
 
 concurrency:
@@ -32,15 +32,21 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
-          cache: 'pnpm'
+          cache: "pnpm"
 
       - name: Install dependencies
         run: pnpm install
 
-      - name: Set Next.js to static export
-        run: |
-          pnpm build
-          pnpm export
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+        with:
+          static_export: true
+
+      - name: Build with Next.js
+        run: pnpm build
+        env:
+          UPSTASH_REDIS_REST_URL: ${{ secrets.UPSTASH_REDIS_REST_URL }}
+          UPSTASH_REDIS_REST_TOKEN: ${{ secrets.UPSTASH_REDIS_REST_TOKEN }}
 
       - name: Upload static output
         uses: actions/upload-pages-artifact@v3
