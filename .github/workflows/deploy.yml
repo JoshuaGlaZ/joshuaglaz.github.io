@@ -43,7 +43,9 @@ jobs:
           static_export: true
 
       - name: Build with Next.js
-        run: pnpm export
+        run: | 
+          pnpm build
+          pnpm export
         env:
           UPSTASH_REDIS_REST_URL: ${{ secrets.UPSTASH_REDIS_REST_URL }}
           UPSTASH_REDIS_REST_TOKEN: ${{ secrets.UPSTASH_REDIS_REST_TOKEN }}
