@@ -99,7 +99,7 @@ function GSoCItem({ post }: { post: GSoCPost }) {
 export default function GSoCPage() {
   const posts = allGSoCPosts.sort((a, b) => b.week - a.week);
 
-  console.log('GSoC posts:', allGSoCPosts.map(p => ({ slug: p.slug, week: p.week, title: p.title })));
+  // console.log('GSoC posts:', allGSoCPosts.map(p => ({ slug: p.slug, week: p.week, title: p.title })));
 
   return (
     <div className="relative pb-16 min-h-screen bg-zinc-900">
