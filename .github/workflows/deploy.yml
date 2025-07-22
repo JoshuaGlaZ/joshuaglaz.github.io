@@ -23,19 +23,20 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js and cache deps
+      - name: Setup Node.js & pnpm
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: 'pnpm'
+          check-latest: true
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Set Next.js to static export
         run: |
-          # Ensure your next.config.js has: output: "export"
-          npm run build
-          npm run export
+          pnpm build
+          pnpm export
 
       - name: Upload static output
         uses: actions/upload-pages-artifact@v3
