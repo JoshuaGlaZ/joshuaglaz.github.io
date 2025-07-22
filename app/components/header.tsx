@@ -1,6 +1,7 @@
 "use client";
 import { ArrowLeft, Eye, Github, Twitter } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
 
 type Props = {
@@ -14,6 +15,9 @@ type Props = {
   views: number;
 };
 export const Header: React.FC<Props> = ({ project, views }) => {
+  const pathname = usePathname();
+  const backHref = pathname!.startsWith("/gsoc") ? "/gsoc" : "/projects";
+  
   const ref = useRef<HTMLElement>(null);
   const [isIntersecting, setIntersecting] = useState(true);
 
@@ -77,7 +81,7 @@ export const Header: React.FC<Props> = ({ project, views }) => {
           </div>
 
           <Link
-            href="/projects"
+            href={backHref}
             className={`duration-200 hover:font-medium ${isIntersecting
                 ? " text-zinc-400 hover:text-zinc-100"
                 : "text-zinc-600 hover:text-zinc-900"

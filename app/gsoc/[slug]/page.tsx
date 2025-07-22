@@ -9,11 +9,16 @@ type Props = {
   };
 };
 
+  
 export async function generateStaticParams() {
-  return allGSoCPosts
-    .map((p) => ({
-      slug: p.slug,
-    }));
+  const params: { slug: string; }[] = [];
+  allGSoCPosts.forEach(post => {
+    params.push({ slug: post.slug });
+    if (post.week) {
+      params.push({ slug: post.week.toString() });
+    }
+  });
+  return params;
 }
 
 function findPostBySlugOrWeek(slug: string) {
