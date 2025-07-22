@@ -6,18 +6,10 @@
 *.css text eol=lf
 *.js text eol=lf
 
-# Jekyll related files
-*.yml text eol=lf
-
 # Git related files
 .gittattributes text eol=lf
 .gitignore text eol=lf
 .gitkeep text eol=lf
-
-# Ruby files
-*.rb text eol=lf
-Gemfile text eol=lf
-Gemfile.lock text eol=lf
 
 # Github specific fies
 LICENCE text eol=lf
@@ -46,3 +38,9 @@ Dockerfile text eol=lf
 *.mp3 binary
 *.ogg binary
 *.flv binary
+
+*.mdx text eol=lf
+*.md text eol=lf
+*.js text eol=lf
+*.ts text eol=lf
+*.tsx text eol=lf

@@ -1,0 +1,49 @@
+---
+title: "Getting Started with noWorkFlow and AST"
+week: 1
+date: "2024-05-30"
+description: "Setting up the development environment, exploring ASTs, and planning the project’s first steps."
+tags: ["gsoc", "week1"]
+---
+
+
+---
+
+# Initial Communication
+
+Before the official start of the first week, I had already engaged in discussions with my mentor regarding the scope and overall codebase of noWorkFlow. 
+
+This week was all about getting familiarized with noWorkFlow and its dependencies, which I'll be using for my project in GSoC 2024. 
+I started by reading some documentation and tutorials about AST (Abstract Syntax Tree) to gaining a better understanding of their structures and functionalities.
+
+AST is a data structure that represent a code in the form of tree.  In the context of my project, AST plays a pivotal role in enabling the comparison of provenance data from different trials. 
+By traversing and inspecting the AST of source code, I can extract essential information and identify similarities or discrepancies between trials.
+
+---
+
+# Learnings
+
+My mentors has given some guidance for the documentation of AST, especially from [Green Tree Snakes](https://greentreesnakes.readthedocs.io/en/latest/). I also watch some Python Conference that specifically
+talks about AST.
+
+I began practicing writing basic code with AST to read and analyze source code with a different types of Python constructs using ``ast.NodeVisitor``. The output initially aimed to generate a graph representing the code's structure, but for now, it will be a table that compares different node types across multiple trials.
+
+---
+
+# Difficulty
+
+I encountered several challenges during the setup of my development environment, many of which arose due to outdated documentation of noWorkFlow. 
+These obstacles prompted me to search online for solutions to troubleshoot effectively.
+
+The difficulties I faced included:
+
+- Incompatibility with my current Python versions ✔️
+- Discrepancies in driver paths conflicting with environment paths ✔️
+- Ongoing integration issues with IPython and noWorkFlow ❌
+
+Currently, the solution for the development environment involves prioritizing Python development initially, with the integration of IPython/Jupyter postponed to later stages.
+Next week, I plan to start learning SQLAlchemy, another key tool in noWorkFlow.
+
+Thanks to my mentor, [João Felipe Pimentel](https://github.com/JoaoFelipe), for helping me get started and guiding me.
+
+Looking forward to sharing more progress with you next week. See you then!

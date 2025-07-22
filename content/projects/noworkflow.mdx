@@ -1,0 +1,157 @@
+---
+title: "noworkflow"
+description: An open-source tool designed to automatically trace and visualize Abstract Syntax Trees (AST) from Python scripts. This enables users to analyze, compare, and understand the transformation of code during development or experimentation without altering the original script.
+repository: gems-uff/noworkflow
+date: "2024-08-22"
+published: true
+---
+
+noworkflow is an open-source tool for Python that automatically traces and visualizes Abstract Syntax Trees (AST) from scripts. It helps users analyze, compare, and understand code transformations during development or experimentation—without modifying the original script.
+
+- **Automatic AST tracing**: Capture ASTs from Python scripts with no code changes.
+- **Visualization**: Visualize and compare ASTs to understand code evolution.
+- **Open source**: Community-driven and extensible.
+- **No code modification required**: Works transparently with your existing scripts.
+
+## Screenshots
+
+**Graph of Trials**
+
+![Graph of Trials](/noworkflow-graph-of-trials.png)
+
+**Trial Detail**
+
+![Trial Detail](/noworkflow-trial-detail.png)
+
+**Comparison View**
+
+![Comparison View](/noworkflow-comparison.png)
+
+## Installation
+
+Ready to get started? Here are the concise instructions for installing noworkflow. For comprehensive details and troubleshooting, please refer to the [official noworkflow GitHub repository](https://github.com/gems-uff/noworkflow).
+
+### Quick Installation (Recommended)
+
+For a quick setup, use pip. This method installs the stable version along with common dependencies for provenance analysis:
+
+```bash
+pip install noworkflow[all]
+```
+
+If you only need the core noWorkflow functionality without the provenance analysis tools, you can install just the essential components:
+
+```bash
+pip install noworkflow
+```
+### Installing the Latest Version (from Source)
+
+To get the most up-to-date stable version, clone the repository and install from source. This is recommended for accessing the newest features and compatibility with recent Python versions (e.g., Python 3.12.4).
+
+```bash
+git clone git@github.com:gems-uff/noworkflow.git
+cd noworkflow
+python setup.py install
+pip install -e ".[all]"
+```
+
+## Usage
+
+noWorkflow operates transparently, requiring no modifications to your Python scripts. Here's a brief overview of common commands. For a complete guide and advanced features, check out the [official documentation on GitHub](https://github.com/gems-uff/noworkflow).
+
+### Basic Execution & Provenance
+
+To run a Python script with noWorkflow and automatically capture its provenance:
+```bash
+now run script.py
+```
+Use the -v (verbose) option for detailed feedback during execution:
+```bash
+now run -v script.py
+```
+Each run generates a unique "trial" stored in the provenance database.
+### Managing Trials
+
+- List all trials:
+```bash
+now list
+```
+This command shows a summary of all recorded trials, including their status (f for not finished, * for finished, b for backup).
+
+- Restore files from a trial:
+```bash
+now restore [trial_id]
+```
+Restores the script, imported local modules, and initial file accesses from a specific trial. Use options like -s (skip script), -l (skip modules), or -a (skip file accesses). You can also restore a single file using now restore -f path.
+
+- View trial details:
+```bash
+now show [trial_id]
+```
+Displays detailed information about a trial. Options include -m (module dependencies), -d (function definitions), -e (environment context), -a (function activations), -p (noworkflow parameters), and -f (file accesses).
+
+- Compare two trials:
+```bash
+now diff [trial1_id] [trial2_id]
+```
+Compares the provenance data of two trials. Options exist to compare modules (-m), environment (-e), or file accesses (-f).
+
+### Advanced Analysis & Export
+
+- Generate dataflow graph (Graphviz DOT format):
+
+```bash
+now dataflow [trial_id] -m prospective | dot -Tpng -o prospective.png
+```
+- Export provenance to Prolog facts:
+
+```bash
+now export [trial_id]
+```
+- Export provenance to PROV-O format:
+
+```bash
+prov [trial_id]
+```
+- View database schema (SQL or Prolog):
+
+```bash
+now schema sql
+now schema prolog
+```
+
+- Check history evolution graph:
+
+```bash
+now history [trial_id]
+```
+
+- Query evaluations and dependencies:
+
+```bash
+now evaluation      # Shows executions and accesses to values
+now evaluation wdf  # Identifies dataflow dependency relationships
+```
+
+- Export AST (Prolog or Notebook):
+
+```bash
+now ast [trial_id]
+```
+
+You can also specify output format using -j (--json) for JSON or -d (--dot) for Graphviz dot format:
+
+```bash
+now ast [trial_id] --dot
+```
+
+## Gist Report
+
+This section contains my Google Summer of Code (GSoC) report for my work on noworkflow. The report summarizes my contributions, key achievements, and the impact of my work on the project.
+
+[Read the full GSoC report](https://gist.github.com/JoshuaGlaZ/acca2c1649ba1b828a41e75a24076b71)
+
+## Contributing
+
+noworkflow is open source and welcomes contributions!  
+See the [contributing guide](https://github.com/gems-uff/noworkflow/blob/main/CONTRIBUTING.md) to get started.

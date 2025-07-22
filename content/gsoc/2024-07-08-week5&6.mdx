@@ -1,0 +1,258 @@
+---
+title: "Integrating AST and Custom Graph Models in noWorkFlow"
+week: 6
+date: "2024-07-08"
+description: "Integrated AST construction into noWorkFlow and developed a new graph model for trial definitions."
+tags: ["gsoc", "week5", "week6"]
+---
+
+---
+
+# trial.py
+
+My progress in week 5 involved integrating the AST construct function so it can be used in noWorkflow. The first step was to add another property inside `trial.py`. When `definition` is invoked, it returns the root of the AST's body, the script.
+
+Previously, I was using my own class of session and models, but this week I am using the encapsulated classes in noWorkflow. Since I already understood the flow, this transition was smooth. By referencing the other processes, the result was great.
+
+## definition of the trial
+
+```python
+class Trial(AlchemyProxy):
+    ...
+    @property
+    def definition(self):
+        """Return an AST representation of trial's definition"""
+        from ...models.node_definition import construct_node, construct_relationship
+        code_components = self.code_component_definition()
+        compositions = self.composition_definition()
+        node_dict = {}
+        for component in code_components:
+            node = construct_node(component, self.label_def())
+            if node is None:
+                continue
+            node_dict[component.id] = node
+
+        for composition in compositions:
+            whole_node = node_dict.get(composition.whole_id)
+            part_node = node_dict.get(composition.part_id)
+
+            if whole_node is None or part_node is None:
+                if composition.extra is None:
+                    continue
+            construct_relationship(whole_node, part_node, composition)
+
+        return node_dict[1]
+```
+
+This method constructs the AST representation by first creating nodes for each code component and then establishing relationships between these nodes based on compositions. Unlike the previous week, this method is now a property instead of just a variable.
+
+## Using noworkflow session and table model
+
+```python
+    def code_component_definition(self):
+        """Return a code component definition"""
+        from .code_component import CodeComponent
+        return relational.session.query(CodeComponent.m).filter((
+            (CodeComponent.m.trial_id == self.id) &
+            (CodeComponent.m.type != "syntax")
+        )).all()
+
+    def composition_definition(self):
+        """Return a composition definition"""
+        from .composition import Composition
+        return relational.session.query(Composition.m).filter((
+            (Composition.m.trial_id == self.id) &
+            (Composition.m.type != '*op_pos')
+        )).all()
+```
+
+These methods query the `CodeComponent` and `Composition` tables to retrieve the necessary data for constructing the trial definition. Now, the code uses `Class`.m instead of calling the class directly.
+
+## label for multi-line node
+
+```python
+    def label_def(self):
+        "Return the label needed for the trial's definition multi-name node."
+        from .code_component import CodeComponent
+        from .composition import Composition
+        def_id = relational.session.query(CodeComponent.m.id).join(
+            Composition.m,
+            (CodeComponent.m.id == Composition.m.part_id) &
+            (CodeComponent.m.trial_id == Composition.m.trial_id)
+        ).filter(
+            (CodeComponent.m.trial_id == self.id) &
+            (CodeComponent.m.type == 'function_def') | (CodeComponent.m.type == 'class_def')
+        ).subquery()
+
+        labels = relational.session.query(
+            CodeComponent.m.name,
+            CodeComponent.m.type,
+            Composition.m.whole_id,
+            Composition.m.position
+        ).join(
+            Composition.m,
+            (CodeComponent.m.id == Composition.m.part_id) &
+            (CodeComponent.m.trial_id == Composition.m.trial_id)
+        ).filter(
+            (CodeComponent.m.trial_id == self.id) &
+            (CodeComponent.m.type != 'syntax') &
+            Composition.m.whole_id.in_(def_id)
+        ).all()
+
+        return [{
+            'name': def_.name,
+            'type': def_.type,
+            'whole_id': def_.whole_id,
+            'position': def_.position}
+            for def_ in labels]
+```
+
+This method returns the labels for multi-line node, like function and class definitions. The query is overall the same, only the object is different.
+
+# Trial Definition
+
+In week 6, after meetings with my mentor, we decided that the structure of the nodes should not be AST-based for displaying as a graph. Instead of using trial as placeholder for the ast, I create a whole new model.
+The reason is that the graph follows a customized structure in noWorkflow.
+
+![Graph Structure](../graph.png "Graph Structure")
+
+```typescript
+
+export
+interface TrialNodeData {
+  activations: { [trial: string]: number; }[];
+  children: TrialNodeData[];
+  children_index: number; // Position in parent list
+  duration: { [trial: string]: number; };
+  full_tooltip: boolean;
+  name: string;
+  tooltip: { [trial: string]: string; };
+  trial_ids: number[];
+
+  // Do not use it
+  index: number; // Represents parent index in preorder list
+  caller_id: number; // Represents activation id
+  parent_index: number; // Represents parent index in preorder list
+  repr?: string; // Represents structure repr in structure summarization
+
+  // Other
+  x0?: number;
+  y0?: number;
+}
+
+export
+interface TrialEdgeData {
+  count: { [trial: string]: number; };
+  source: number;
+  target: number;
+  type: number;
+}
+
+export
+interface TrialGraphData {
+  root: TrialNodeData;
+  edges: TrialEdgeData[];
+  max_duration: { [trial: string]: number; };
+  min_duration: { [trial: string]: number; };
+  colors: { [trial: string]: number; };
+  trial1: number;
+  trial2: number;
+}
+```
+
+In general, the graph consists of nodes and edges. The graph's root follows the root of the AST structure, but instead of AST objects, it is defined as `TrialNodeData`. 
+The root is placed in `children`. The name is the same as the AST one. Another key point is the tooltip. The tooltip will be used as a label for the node. When the node is hovered over, it will display the tooltip content, making it perfect for labeling the node's content.
+The index will be listed as the ID of the `code_component`. 
+
+Next is the edge. The main points are the source and target, which generate an arrow to follow. The type determines the arrow's appearance. There are four types: initial, call, sequence, and return.
+- Initial is the arrow pointing to the root of the graph, the script itself.
+- Call is the arrow pointing down to the next level of the tree, used for referencing the root's body, displaying the name and value of simpler nodes, and displaying the attribute of node relationships to other nodes.
+- Sequence is the arrow pointing horizontally to the same level of the tree, used to mention the next index of the property, like the line of code (`*body`).
+- Return is the arrow pointing up from the child node to the parent node, used in edge cases like return statements or referencing back from the end child node to the parent.
+
+## trial_definition.py
+
+```python
+# Copyright (c) 2016 Universidade Federal Fluminense (UFF)
+# Copyright (c) 2016 Polytechnic Institute of New York University.
+# This file is part of noWorkflow.
+# Please, consult the license terms in the LICENSE file.
+"""Trial Definition Model"""
+from __future__ import (absolute_import, print_function,
+                        division, unicode_literals)
+
+import ast
+from collections import defaultdict
+
+class TrialGraph:
+    def __init__(self):
+        self.activations = defaultdict(lambda: defaultdict(int))
+        self.children = []
+        self.children_index = 0
+        self.duration = defaultdict(int)
+        self.full_tooltip = None
+        self.name = None
+        self.tooltips = defaultdict
+        
+
+class TrialAst:
+    def __init__(self, components, compositions, def_dict):
+        self.components = components
+        self.compositions = compositions
+        self.def_dict = def_dict
+        self.node_dict = {}
+
+    def __call__(self):
+        for component in self.components:
+            node = self.construct_ast_node(component, self.def_dict)
+            if node is None:
+                continue
+            self.node_dict[component.id] = node
+
+        for composition in self.compositions:
+            whole_node = self.node_dict.get(composition.whole_id)
+            part_node = self.node_dict.get(composition.part_id)
+
+            if whole_node is None or part_node is None:
+                if composition.extra is None:
+                    continue
+            self.construct_ast_relationship(whole_node, part_node, composition)
+
+        return self.node_dict[1]
+
+    def construct_ast_node(self, component, def_dict):
+        ...
+
+    def construct_ast_relationship(self, whole_node, part_node, composition):
+        ...
+```
+
+This model consists of two classes: one for the graph and one for the AST. Currently, the `TrialGraph` class is empty. `TrialAst` class is the refactored code of the definition property in `trial.py`
+
+# route definition in now vis 
+
+`now vis` uses the Flask web server to display the graph. To accommodate the new feature, I defined a route in views.py to serve the trial definition graph as JSON:
+
+```python
+app = WebServer().app
+...
+@app.route("/experiments/<expCode>/trials//<tid>/definition/<graph_mode>/<cache>.json")
+@app.route("/trials/<tid>/definition/<graph_mode>/<cache>.json")
+def trial_graph(tid, graph_mode, cache,expCode=None):
+    """Respond trial defintion graph as JSON"""
+    trial = Trial(tid)
+    definition = trial.definition
+    graph.use_cache &= bool(int(cache))
+    _, tgraph, _ = getattr(definition, graph_mode)()
+    return jsonify(**tgraph)
+```
+
+This route handler retrieves the trial definition and converts it into a JSON format suitable for visualization. Currently, the definition is using the property instead of `TrialGraph`
+
+# NPM Issue
+
+With npm being used to serve the output of the graph, I instinctively proceeded to add a web component, like a checkbox or options. However, an error occurred during `npm install` (since this was my first interaction with noWorkflow's npm), so I created an issue, [Error during npm install](https://github.com/gems-uff/noworkflow/issues/163)
+
+---
+
+With that, this concludes the midterm progress update. The next step is to implement the `TrialGraph` that follows the structure needed for week 7. I'll continue the progress once I have finished my study excursion on 18 July.
