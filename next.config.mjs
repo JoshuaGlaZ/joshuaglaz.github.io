@@ -10,6 +10,12 @@ const nextConfig = {
 	experimental: {
 		mdxRs: true,
 	},
+  images: {
+    unoptimized: true,
+  },
+  generateBuildId: async () => {
+    return 'static-build'
+  },
 };
 
 export default withContentlayer(nextConfig);
