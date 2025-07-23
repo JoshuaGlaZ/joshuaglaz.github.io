@@ -15,7 +15,7 @@ type Props = {
   };
 };
 
-const redis = Redis.fromEnv();
+// const redis = Redis.fromEnv();
 
 export async function generateStaticParams() {
   return allProjects
@@ -31,9 +31,12 @@ export default async function PostPage({ params }: Props) {
   if (!project) {
     notFound();
   }
+  if (!project.published) {
+    notFound();
+  }
 
-  const views =
-    (await redis.get<number>(["pageviews", "projects", slug].join(":"))) ?? 0;
+  const views = 0
+    // (await redis.get<number>(["pageviews", "projects", slug].join(":"))) ?? 0;
 
   return (
     <div className="bg-zinc-50 min-h-screen">
