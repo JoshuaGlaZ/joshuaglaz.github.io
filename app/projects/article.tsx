@@ -9,14 +9,17 @@ type Props = {
 
 export const Article: React.FC<Props> = ({ project, views }) => {
   return (
-    <Link href={`/projects/${project.slug}/`}>
-      <article className="p-4 md:p-8 h-full">
+    <Link
+      href={`/projects/${project.slug}/`}
+      className="block p-6 hover:bg-zinc-800/40 rounded-lg transition-colors duration-150"
+    >
+      <article className="h-full">
         <div className="flex justify-between gap-2 items-center">
-          <span className="text-xs duration-1000 text-zinc-200 group-hover:text-white group-hover:border-zinc-200 drop-shadow-orange">
+          <span className="text-xs text-zinc-500 font-mono">
             {project.date ? (
               <time dateTime={new Date(project.date).toISOString()}>
                 {Intl.DateTimeFormat(undefined, { dateStyle: "medium" }).format(
-                  new Date(project.date),
+                  new Date(project.date)
                 )}
               </time>
             ) : (
@@ -30,10 +33,10 @@ export const Article: React.FC<Props> = ({ project, views }) => {
             </div>
           )}
         </div>
-        <h2 className="z-20 text-xl font-medium duration-1000 lg:text-3xl text-zinc-200 group-hover:text-white font-display">
+        <h2 className="mt-1 text-lg font-semibold text-zinc-100 font-display">
           {project.title}
         </h2>
-        <p className="z-20 mt-4 text-sm duration-1000 text-zinc-400 group-hover:text-zinc-200">
+        <p className="mt-2 text-sm text-zinc-400">
           {project.description}
         </p>
       </article>
