@@ -25,9 +25,9 @@ const socials = [
 	},
 	{
 		icon: <Phone size={20} />,
-		href: "https://wa.me/089526383030",
+		href: "https://wa.me/+6289526383030",
 		label: "Whatsapp",
-		handle: "089526383030",
+		handle: "+6289526383030",
 	},
 ];
 
