@@ -36,7 +36,7 @@ export const Article: React.FC<Props> = ({ project, views }) => {
         <h2 className="mt-1 text-lg font-semibold text-zinc-100 font-display">
           {project.title}
         </h2>
-        <p className="mt-2 text-sm text-zinc-400">
+        <p className="mt-2 text-sm text-zinc-400 line-clamp-3">
           {project.description}
         </p>
       </article>

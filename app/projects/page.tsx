@@ -40,7 +40,6 @@ export default function ProjectsPage() {
 
   const usedSlugs = new Set([featured?.slug, top2?.slug, top3?.slug].filter(Boolean));
   const remainingProjects = sortedProjects.filter(project => !usedSlugs.has(project.slug));
-
   return (
     <div className="relative pb-16">
       <Navigation />
@@ -84,10 +83,10 @@ export default function ProjectsPage() {
                     >
                       {featured.title}
                     </h2>
-                    <p className="mt-4 leading-8 text-zinc-400 group-hover:text-zinc-300">
+                    <p className="mt-4 leading-8 text-zinc-400 group-hover:text-zinc-300 line-clamp-4">
                       {featured.description}
                     </p>
-                    <div className="absolute bottom-4 md:bottom-8">
+                    <div className="mt-6">
                       <p className="hidden text-zinc-200 hover:text-zinc-50 lg:block">
                         Read more <span aria-hidden="true">&rarr;</span>
                       </p>
