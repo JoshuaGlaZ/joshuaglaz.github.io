@@ -11,7 +11,7 @@ export const Article: React.FC<Props> = ({ project, views }) => {
   return (
     <Link
       href={`/projects/${project.slug}/`}
-      className="block p-6 hover:bg-zinc-800/40 rounded-lg transition-colors duration-150"
+      className="block p-6 rounded-lg transition-colors duration-150"
     >
       <article className="h-full">
         <div className="flex justify-between gap-2 items-center">

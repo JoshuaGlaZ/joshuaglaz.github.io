@@ -60,7 +60,7 @@ export default function ProjectsPage() {
               <Card>
                 <Link
                   href={`/projects/${featured.slug}`}
-                  className="block p-8 hover:bg-zinc-800/40 rounded-lg transition-colors duration-150"
+                  className="block p-8 rounded-lg transition-colors duration-150"
                 >
                   <article className="relative w-full h-full">
                     <div className="flex items-center justify-between gap-2">
