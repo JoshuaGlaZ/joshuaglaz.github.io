@@ -1,18 +1,69 @@
 ---
-title: DroveVSBird
-description: Machine learning model SVM to classify drones and birds.
+title: "DroneVSBird"
+description: A machine learning web application that classifies images as drones or birds using HOG features and SVM classification with 98.7% accuracy.
 repository: JoshuaGlaZ/drone-vs-bird
 date: "2024-10-14"
 published: true
 ---
 
-DroveVSBird is a machine learning project that classifies images of drones and birds using advanced image processing and SVM models.
+DroneVSBird is a machine learning web application that distinguishes between drones and birds in images using Histogram of Oriented Gradients (HOG) features and Support Vector Machine (SVM) classification. The project includes both a Flask backend API and a PHP frontend web interface, achieving 98.7% accuracy on the test set after hyperparameter tuning.
 
-###### Key Features
-- **Image classification**: Distinguishes between drones and birds in images.
-- **Data augmentation**: Improves model robustness with augmented datasets.
-- **HOG preprocessing**: Uses Histogram of Oriented Gradients for feature extraction.
-- **Multiple classifiers**: Evaluates and compares different machine learning models.
+- **Image Classification**: Upload images through a web interface for instant drone/bird classification
+- **High Accuracy Model**: Achieved 98.7% accuracy using SVM with HOG feature extraction
+- **Data Augmentation**: Improved model robustness with augmented training datasets
+- **Multiple Classifiers**: Evaluated and compared different machine learning models
+- **Docker Support**: Easy deployment with Docker Compose for both frontend and backend
 
-###### Usage
-See the [drone-vs-bird repository](https://github.com/JoshuaGlaZ/drone-vs-bird) for code, datasets, and instructions.
+## Tech Stack
+- **Backend**: Python (Flask), PHP
+- **ML Libraries**: scikit-learn, OpenCV, NumPy, Pandas, SciPy
+- **Frontend**: HTML, CSS, JavaScript, PHP
+- **Tools**: Jupyter Notebook, Docker, Git
+- **Deployment**: Docker Compose
+
+## Screenshots
+
+**Web Interface**
+
+![Web Interface](/dronevsbird1.png)
+
+**Classification Results**
+
+![Classification Results](/dronevsbird2.png)
+
+## Installation
+
+### Option 1: Docker (Recommended)
+
+The easiest way to run DroneVSBird is using Docker, which sets up both the Flask backend and PHP frontend automatically:
+
+```bash
+git clone https://github.com/JoshuaGlaZ/drone-vs-bird.git
+cd drone-vs-bird
+docker-compose up --build
+```
+
+Access the application:
+- **Flask Backend API**: http://localhost:5000
+- **PHP Frontend Web Interface**: http://localhost:8085
+
+### Option 2: Local Development
+
+#### Backend Setup
+
+```bash
+git clone https://github.com/JoshuaGlaZ/drone-vs-bird.git
+cd drone-vs-bird
+pip install -r requirements.txt
+python app.py
+```
+
+#### Frontend Setup
+
+```bash
+# Using PHP's built-in server
+php -S localhost:8085
+```
+1. Navigate to http://localhost:8085
+2. Click "Choose File" and select an image of a drone or bird
+3. The system will process the image and display the result (Drone or Bird)

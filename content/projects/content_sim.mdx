@@ -13,6 +13,12 @@ content-sim is a hybrid PHP/Python application that aggregates posts and tweets,
 - **Web-based interface**: Easy to use and accessible from any browser.
 - **Customizable queries**: Tailor your searches for specific needs.
 
+## Tech Stack
+- **Backend**: Python (Flask)
+- **ML Libraries**: TensorFlow, Keras, Librosa
+- **Client**: Android (Java/Kotlin)
+- **Other Tools**: NumPy, Pandas, GitHub Actions for CI/CD
+
 ## Screenshots
 
 ![1](/content-sim1.png)
@@ -38,7 +44,7 @@ pip install -r requirements.txt
 
 ## Usage
 1. Start web server (php -S localhost:8080 -t public/).
-2. Launch scrapers as needed (fill in your social media credentials to avoid blocked):
+2. Launch desired scrapers (twitter_scrapper.py, ws-ig.py, youtube.py) with your credentials.
 ```bash
 python twitter_scrapper.py
 python ws-ig.py

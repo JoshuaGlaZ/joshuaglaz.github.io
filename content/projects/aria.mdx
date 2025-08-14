@@ -6,12 +6,19 @@ date: "2024-12-17"
 published: true
 ---
 
-AIRA is an AI‑powered piano mentor built by Team C242‑PS540 for the Bangkit Academy 2024 Capstone. By analyzing live audio or MIDI input, it automatically detects note and rhythm mistakes, delivers targeted feedback in under 300 ms, and motivates learners through a gamified progression system—no teacher required.
+AIRA is an AI‑powered piano mentor built by Team C242‑PS540 for the Bangkit Academy 2024 Capstone. A real-time piano learning assistant that detects note and rhythm errors in under 300 ms, providing instant feedback to students via an Android client. Built with a Flask backend for low-latency audio processing and machine learning classification.
 
-- **Real‑Time Feedback**: Classifies Wrong Note, Missing Note, Extra Note, or No Error against reference MIDI with 92% accuracy.
-- **Gamified Practice**: Unlock chord challenges, earn badges, and track streaks to stay motivated.
-- **Cross‑Platform Android App**: Kotlin‑built mobile client that streams audio to cloud ML services.
-- **Scalable Serverless Backend**: Express.js APIs and Flask audio workers on Google Cloud (App Engine, Cloud Run) with Prisma/MySQL.
+- **Real‑Time Feedback**: Classifies Wrong Note, Missing Note, Extra Note, or No Error against reference MIDI with ~92% accuracy.
+- **Low-Latency Feedback** – End-to-end processing time under 300 ms.
+- **Cross-Platform Streaming** – Streams audio from Android app to Python backend.
+- **ML-Driven Classification** – Trained on annotated piano audio datasets for robust detection.
+- **Immediate Learning Aid** – Students can self-correct mistakes mid-practice session.
+
+## Tech Stack
+- **Backend**: Python (Flask)
+- **ML Libraries**: TensorFlow, Keras, Librosa
+- **Client**: Android (Java/Kotlin)
+- **Other Tools**: NumPy, Pandas, GitHub Actions for CI/CD
 
 ## Screenshots
 
