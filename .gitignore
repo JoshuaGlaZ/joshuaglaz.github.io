@@ -1,30 +1,45 @@
-# Node/Next.js
-node_modules/
-.next/
-out/
-.contentlayer/
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-# System files
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
 .DS_Store
-Thumbs.db
-ehthumbs.db
+*.pem
 
-# Editor
-.vscode/
-.idea/
-
-# Env
-.env.local
-
-# Legacy Jekyll
-_site/
-.sass-cache/
-Gemfile.lock
-beautiful-jekyll-theme-*.gem
-
-# Misc
-*.log
+# debug
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-pnpm-debug.log*
+.pnpm-debug.log*
+
+# env files (can opt-in for committing if needed)
+.env*
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# local assets
+/icon-asset
+/glitch-effects-knowledge
