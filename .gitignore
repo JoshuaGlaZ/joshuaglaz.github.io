@@ -41,5 +41,5 @@ yarn-error.log*
 next-env.d.ts
 
 # local assets
-/icon-asset
 /glitch-effects-knowledge
+/icon-asset

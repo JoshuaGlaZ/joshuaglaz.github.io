@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, Search, X, Calendar } from "lucide-react";
 import Particles from "../components/particles";
+import { Card } from "../components/card";
 import { SignalHeader } from "../components/SignalHeader";
 
 interface BlogItem {
@@ -56,7 +57,7 @@ export default function BlogClient({ blogs }: BlogClientProps) {
 					eyebrow="Writing / GSoC evidence"
 					title="Dev Logs"
 					description="Progress logs from the GSoC 2024 noWorkflow contribution, kept as supporting evidence for the open-source work."
-					meta={[`${blogs.length} logs`, "noworkflow", "gsoc 2024", "mdx source"]}
+					meta={[`${blogs.length} logs`, "noworkflow", "gsoc 2024"]}
 					compact
 					className="mb-10"
 					minimal={true}
@@ -98,26 +99,27 @@ export default function BlogClient({ blogs }: BlogClientProps) {
 								year: "numeric"
 							});
 							return (
-								<Link
-									key={b.slug}
-									href={`/blog/${b.slug}`}
-									className="group flex flex-col sm:flex-row sm:items-baseline justify-between gap-4 rounded-lg border border-zinc-800 bg-zinc-950/20 p-4 sm:p-6 transition-all duration-300 hover:border-zinc-500/50 hover:bg-zinc-950/50"
-								>
-									<div className="space-y-1 max-w-2xl min-w-0">
-										<h3 className="font-display text-lg sm:text-xl font-semibold text-zinc-100 transition-colors duration-200 group-hover:text-white">
-											{b.title}
-										</h3>
-										{b.description && (
-											<p className="text-sm text-zinc-400 line-clamp-2">
-												{b.description}
-											</p>
-										)}
-									</div>
-									<div className="flex items-center gap-2 text-xs text-zinc-500 sm:shrink-0 font-mono">
-										<Calendar className="h-3.5 w-3.5" />
-										{dateStr}
-									</div>
-								</Link>
+								<Card key={b.slug}>
+									<Link
+										href={`/blog/${b.slug}`}
+										className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-4 p-4 sm:p-6"
+									>
+										<div className="space-y-1 max-w-2xl min-w-0">
+											<h3 className="card-title-glitch font-display text-lg sm:text-xl font-semibold text-zinc-100" data-text={b.title}>
+												<span>{b.title}</span>
+											</h3>
+											{b.description && (
+												<p className="text-sm text-zinc-400 line-clamp-2">
+													{b.description}
+												</p>
+											)}
+										</div>
+										<div className="flex items-center gap-2 text-xs text-zinc-500 sm:shrink-0 font-mono">
+											<Calendar className="h-3.5 w-3.5" />
+											{dateStr}
+										</div>
+									</Link>
+								</Card>
 							);
 						})}
 					</div>

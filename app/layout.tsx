@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import localFont from "next/font/local";
 import RouteTransition from "./components/RouteTransition";
+import GlitchCursor from "./components/GlitchCursor";
+import Navigation from "./components/Navigation";
 import "./globals.css";
 
 const inter = Inter({
@@ -36,7 +38,14 @@ export const metadata: Metadata = {
 		]
 	},
 	icons: {
-		icon: "/favicon.png",
+		icon: [
+			{ url: "/favicon.png", type: "image/png" },
+			{ url: "/icon-192.png", sizes: "192x192", type: "image/png" },
+			{ url: "/icon-512.png", sizes: "512x512", type: "image/png" },
+		],
+		apple: [
+			{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" },
+		],
 	},
 };
 
@@ -51,6 +60,8 @@ export default function RootLayout({
 			className={`${inter.variable} ${calSans.variable} h-full antialiased scroll-smooth`}
 		>
 			<body className="min-h-full flex flex-col bg-black text-zinc-400 font-sans">
+				<GlitchCursor />
+				<Navigation />
 				<RouteTransition>{children}</RouteTransition>
 			</body>
 		</html>

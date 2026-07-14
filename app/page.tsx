@@ -1,8 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRight, Calendar, CheckCircle2, FileText, Github, Linkedin, Mail } from "lucide-react";
-import Navigation from "./components/Navigation";
+import { ArrowUpRight, Calendar, FileText, Github, Linkedin, Mail } from "lucide-react";
 import Particles from "./components/particles";
 
 import HeroGlobe from "./components/HeroGlobe";
@@ -12,79 +11,30 @@ import { getGSoCPosts, getProjects, makeExcerpt } from "./lib/markdown";
 
 const techSkills = [
   "Python",
-  "FastAPI",
   "Django",
+  "Flask",
+  "FastAPI",
+  "Tensorflow",
   "PyTorch",
   "scikit-learn",
-  "FAISS",
   "PostgreSQL",
+  "Laravel",
   "Docker",
-  "AWS Lightsail",
-  "Prometheus",
+  "React",
   "TypeScript",
-  "React"
 ];
 
 const stats = [
-  { value: "Surabaya, ID", label: "Current base" },
-  { value: "Python + ML", label: "Primary build lane" },
+  { value: "Surabaya, ID", label: "Based in" },
+  { value: "Python", label: "Focus" },
   { value: "Portfolio-ready", label: "Project posture" }
-];
-
-const proofSignals = [
-  {
-    label: "Search systems",
-    value: "Local-first RAG",
-    copy: "StrataSearch combines scraping, ingestion, FAISS retrieval, and reranking for codebase documentation."
-  },
-  {
-    label: "Open source",
-    value: "Python provenance",
-    copy: "GSoC work on noWorkflow surfaces AST and trial views for understanding how scripts evolve."
-  },
-  {
-    label: "Applied ML",
-    value: "Real-time feedback",
-    copy: "ARIA connects Android audio capture with backend inference for sub-300 ms piano practice feedback."
-  }
-];
-
-const focusAreas = [
-  {
-    title: "Service architecture",
-    copy: "FastAPI, Django, data contracts, background workflows, and clear operational surfaces for demos that can be inspected."
-  },
-  {
-    title: "Evidence-led ML",
-    copy: "Retrieval, anomaly detection, recommender evaluation, and inference paths that keep baselines and assumptions visible."
-  },
-  {
-    title: "Practical delivery",
-    copy: "Project pages, deployment notes, and user-facing demos that show how models, services, and workflows connect."
-  }
 ];
 
 const socialLinks = [
   { label: "GitHub", href: "https://github.com/JoshuaGlaZ", icon: Github },
   { label: "LinkedIn", href: "https://linkedin.com/in/joshua-daniel-talahatu", icon: Linkedin },
-  { label: "Resume", href: "/resume/JoshuaDaniel_FXMedia.pdf", icon: FileText },
   { label: "Email", href: "mailto:joshuatalahatu7@gmail.com", icon: Mail }
 ];
-
-const projectOutcomes: Record<string, string[]> = {
-  stratasearch: [
-    "Multi-stage retrieval pipeline for legacy-vs-modern documentation",
-    "CLI workflow for scraping, ingestion, and evaluation"
-  ],
-  noworkflow: [
-    "Open-source provenance tooling contribution through GSoC",
-    "AST, trial, and comparison views for Python script analysis"
-  ],
-  aria: [
-    "Real-time pitch and rhythm feedback for self-learners",
-    "Mistake classification backed by annotated piano audio data"
-  ]
-};
 
 export default async function Home() {
   const allProjects = getProjects();
@@ -105,7 +55,6 @@ export default async function Home() {
   return (
     <div id="top" className="relative min-h-screen overflow-hidden bg-black text-zinc-400 font-sans selection:bg-zinc-100 selection:text-zinc-950">
       <div aria-hidden="true" className="pointer-events-none fixed inset-0 -z-20 bg-[radial-gradient(circle_at_50%_0%,rgba(82,82,91,0.34),transparent_32rem),linear-gradient(#000,#050505)]" />
-      <Navigation />
 
       <section id="hero" className="relative isolate flex min-h-[92svh] flex-col items-center justify-center overflow-hidden px-6 pb-16 pt-28 text-center sm:pb-20">
         <Particles className="absolute inset-0 z-0 animate-fade-in opacity-40" quantity={85} size={[0.15, 1.6]} speed={0.16} />
@@ -116,7 +65,7 @@ export default async function Home() {
             Backend & Applied ML
           </p>
           <div className="hero-title-stage relative mt-6 max-w-6xl px-2 py-4">
-            <HeroGlobe className="pointer-events-none absolute left-1/2 top-1/2 z-0 h-[20rem] w-[min(112vw,44rem)] -translate-x-1/2 -translate-y-1/2 opacity-[0.34] mix-blend-screen sm:h-[28rem] sm:opacity-[0.4] md:h-[32rem] lg:h-[34rem]" />
+            <HeroGlobe className="pointer-events-none absolute left-1/2 top-1/2 z-0 h-[25rem] w-[min(112vw,50rem)] -translate-x-1/2 -translate-y-1/2 opacity-[0.34] mix-blend-screen sm:h-[34rem] sm:opacity-[0.4] md:h-[38rem] lg:h-[42rem]" />
             <h1 className="relative z-10 animate-title font-display text-5xl font-bold leading-none tracking-normal text-zinc-100 sm:text-7xl md:text-8xl lg:text-9xl">
               Joshua Daniel Talahatu
             </h1>
@@ -128,14 +77,23 @@ export default async function Home() {
           <div className="hero-fade mt-10 flex flex-wrap items-center justify-center gap-3">
             <a
               href="#projects"
-              className="glitch-button inline-flex items-center gap-2 rounded-full bg-zinc-100 px-5 py-3 text-xs font-semibold uppercase tracking-normal text-zinc-950 transition hover:bg-white"
+              className="inline-flex items-center gap-2 rounded-full bg-zinc-100 px-5 py-3 text-xs font-semibold uppercase tracking-normal text-zinc-950 transition hover:bg-white"
             >
               See the work
               <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
             </a>
             <a
+              href="/resume/JoshuaDaniel_FXMedia.pdf"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-2 rounded-full border border-zinc-700 px-5 py-3 text-xs font-semibold uppercase tracking-normal text-zinc-200 transition hover:border-zinc-400 hover:text-white"
+            >
+              <FileText className="h-4 w-4" aria-hidden="true" />
+              Resume
+            </a>
+            <a
               href="#contact"
-              className="glitch-button inline-flex items-center gap-2 rounded-full border border-zinc-700 px-5 py-3 text-xs font-semibold uppercase tracking-normal text-zinc-200 transition hover:border-zinc-400 hover:text-white"
+              className="inline-flex items-center gap-2 rounded-full border border-zinc-700 px-5 py-3 text-xs font-semibold uppercase tracking-normal text-zinc-200 transition hover:border-zinc-400 hover:text-white"
             >
               Get in touch
             </a>
@@ -152,7 +110,7 @@ export default async function Home() {
                   rel={link.href.startsWith("mailto:") ? undefined : "noreferrer"}
                   aria-label={link.label}
                   title={link.label}
-                  className="glitch-button flex h-10 w-10 items-center justify-center rounded-full border border-zinc-700 bg-black/55 text-zinc-300 backdrop-blur transition-colors duration-200 hover:border-zinc-400 hover:bg-zinc-900 hover:text-white"
+                  className="flex h-10 w-10 items-center justify-center rounded-full border border-zinc-700 bg-black/55 text-zinc-300 backdrop-blur transition-colors duration-200 hover:border-zinc-400 hover:bg-zinc-900 hover:text-white"
                 >
                   <Icon className="h-4 w-4" aria-hidden="true" />
                 </a>
@@ -160,15 +118,6 @@ export default async function Home() {
             })}
           </div>
 
-          <div className="hero-fade mt-12 grid w-full max-w-5xl gap-3 text-left sm:grid-cols-3">
-            {proofSignals.map((signal) => (
-              <div key={signal.label} className="rounded-lg border border-zinc-800/90 bg-zinc-950/70 p-4 shadow-[0_18px_70px_rgba(0,0,0,0.28)] backdrop-blur">
-                <p className="text-xs font-medium uppercase tracking-normal text-zinc-500">{signal.label}</p>
-                <p className="mt-2 font-display text-xl font-semibold tracking-normal text-zinc-100">{signal.value}</p>
-                <p className="mt-2 text-sm leading-6 text-zinc-400">{signal.copy}</p>
-              </div>
-            ))}
-          </div>
         </div>
       </section>
 
@@ -180,24 +129,15 @@ export default async function Home() {
           </div>
           <div>
             <h2 className="font-display text-4xl font-bold tracking-normal text-zinc-100 sm:text-5xl md:text-6xl">
-              Systems, retrieval, and ML demos with receipts
+              Hello, I’m Joshua
             </h2>
             <div className="mt-8 max-w-3xl space-y-6 text-base leading-8 text-zinc-400 sm:text-lg">
               <p>
-                I build Python-heavy backend systems and applied ML projects where the engineering story matters as much as the model. The strongest pieces combine APIs, reproducible evaluation, retrieval, and deployment-ready demos.
+                I’m a backend and applied ML engineer focused on building practical systems that are as well engineered as they are intelligent.
               </p>
               <p>
-                This portfolio is intentionally practical: open-source provenance work, RAG/search systems, recommender experiments, and anomaly-detection services that show how data moves from notebooks into usable software.
+                I work primarily in Python, creating APIs, retrieval and search systems, reproducible evaluation workflows, and deployable demos that turn ML concepts into software people can actually use.
               </p>
-            </div>
-
-            <div className="mt-12 grid gap-4 md:grid-cols-3">
-              {focusAreas.map((area) => (
-                <div key={area.title} className="rounded-lg border border-zinc-800 bg-zinc-950/55 p-5">
-                  <h3 className="font-display text-lg font-semibold tracking-normal text-zinc-100">{area.title}</h3>
-                  <p className="mt-3 text-sm leading-6 text-zinc-400">{area.copy}</p>
-                </div>
-              ))}
             </div>
 
             <div className="mt-12">
@@ -227,7 +167,7 @@ export default async function Home() {
         <div className="mb-10 flex flex-col gap-3 md:mb-14">
           <span className="text-xs font-medium uppercase tracking-normal text-zinc-500">Experience</span>
           <h2 className="font-display text-4xl font-bold tracking-normal text-zinc-100 sm:text-5xl md:text-6xl">
-            Work and education
+            Work and Education
           </h2>
         </div>
         <Journey />
@@ -284,19 +224,7 @@ export default async function Home() {
                           ))}
                         </div>
                       </div>
-                      {projectOutcomes[project.slug] && (
-                        <div>
-                          <p className="text-xs font-medium uppercase tracking-normal text-zinc-500">Evidence</p>
-                          <ul className="mt-2 space-y-2">
-                            {projectOutcomes[project.slug].map((outcome) => (
-                              <li key={outcome} className="flex gap-2 text-sm leading-6 text-zinc-300">
-                                <CheckCircle2 className="mt-1 h-4 w-4 shrink-0 text-cyan-300" aria-hidden="true" />
-                                <span>{outcome}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
+
                     </div>
                     <div className="mt-8 flex items-center justify-between border-t border-zinc-800/80 pt-4">
                       <Link href={`/projects/${project.slug}`} className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-normal text-zinc-300 transition hover:text-white">
@@ -336,16 +264,20 @@ export default async function Home() {
             const excerpt = blog.description || makeExcerpt(blog.contentHtml, 120);
 
             return (
-              <Link key={blog.slug} href={`/blog/${blog.slug}`} className="group flex flex-col justify-between gap-4 rounded-lg border border-zinc-800 bg-zinc-950/45 p-6 transition duration-300 hover:border-zinc-600 hover:bg-zinc-950/70 sm:flex-row sm:items-baseline">
-                <div className="max-w-3xl space-y-1">
-                  <h3 className="font-display text-xl font-semibold tracking-normal text-zinc-100 transition-colors group-hover:text-white">{blog.title}</h3>
-                  <p className="line-clamp-2 text-sm text-zinc-400">{excerpt}</p>
-                </div>
-                <div className="flex items-center gap-2 text-xs text-zinc-500 sm:shrink-0">
-                  <Calendar className="h-3.5 w-3.5" aria-hidden="true" />
-                  {dateStr}
-                </div>
-              </Link>
+              <Card key={blog.slug}>
+                <Link href={`/blog/${blog.slug}`} className="flex flex-col justify-between gap-4 p-6 sm:flex-row sm:items-baseline">
+                  <div className="max-w-3xl space-y-1">
+                    <h3 className="card-title-glitch font-display text-xl font-semibold tracking-normal text-zinc-100" data-text={blog.title}>
+                      <span>{blog.title}</span>
+                    </h3>
+                    <p className="line-clamp-2 text-sm text-zinc-400">{excerpt}</p>
+                  </div>
+                  <div className="flex items-center gap-2 text-xs text-zinc-500 sm:shrink-0 font-mono">
+                    <Calendar className="h-3.5 w-3.5" aria-hidden="true" />
+                    {dateStr}
+                  </div>
+                </Link>
+              </Card>
             );
           })}
         </div>
@@ -357,19 +289,23 @@ export default async function Home() {
           <h2 className="font-display text-4xl font-bold tracking-normal text-zinc-100 sm:text-5xl md:text-6xl">Get in touch</h2>
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-3">
           {socialLinks.map((link) => {
             const Icon = link.icon;
             return (
-              <a key={link.label} href={link.href} target={link.href.startsWith("mailto:") ? undefined : "_blank"} rel={link.href.startsWith("mailto:") ? undefined : "noreferrer"} className="group relative flex flex-col items-center gap-4 rounded-lg border border-zinc-800 bg-zinc-950/55 p-7 text-center transition duration-300 hover:border-zinc-600 hover:bg-zinc-950/80">
-                <span className="flex h-12 w-12 items-center justify-center rounded-full border border-zinc-700 bg-zinc-950 text-zinc-200 transition-colors duration-300 group-hover:border-zinc-500 group-hover:text-white">
-                  <Icon className="h-5 w-5" aria-hidden="true" />
-                </span>
-                <div>
-                  <p className="font-display text-base font-medium tracking-normal text-zinc-100 break-all">{link.label === "Email" ? "joshuatalahatu7@gmail.com" : link.label}</p>
-                  <p className="mt-1 text-xs uppercase tracking-normal text-zinc-500">{link.label}</p>
-                </div>
-              </a>
+              <Card key={link.label}>
+                <a href={link.href} target={link.href.startsWith("mailto:") ? undefined : "_blank"} rel={link.href.startsWith("mailto:") ? undefined : "noreferrer"} className="flex flex-col items-center gap-4 p-7 text-center">
+                  <span className="flex h-12 w-12 items-center justify-center rounded-full border border-zinc-700 bg-zinc-950 text-zinc-200 transition-colors duration-300 group-hover:border-zinc-500 group-hover:text-white">
+                    <Icon className="h-5 w-5" aria-hidden="true" />
+                  </span>
+                  <div>
+                    <p className="card-title-glitch font-display text-base font-medium tracking-normal text-zinc-100 break-all" data-text={link.label === "Email" ? "joshuatalahatu7@gmail.com" : link.label}>
+                      <span>{link.label === "Email" ? "joshuatalahatu7@gmail.com" : link.label}</span>
+                    </p>
+                    <p className="mt-1 text-xs uppercase tracking-normal text-zinc-500">{link.label}</p>
+                  </div>
+                </a>
+              </Card>
             );
           })}
         </div>

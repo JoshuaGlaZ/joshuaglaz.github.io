@@ -2,6 +2,7 @@
 
 import React, { useLayoutEffect, useRef, useState } from "react";
 import { Award, Calendar, GraduationCap, MapPin } from "lucide-react";
+import { Card } from "./card";
 
 interface WorkItem {
   period: string;
@@ -195,33 +196,35 @@ function WorkTimeline() {
     <TimelineList>
       {workExperience.map((item) => (
         <TimelineItem key={`${item.company}-${item.period}`}>
-          <div className="rounded-lg border border-zinc-800 bg-zinc-950/65 p-6 transition-colors duration-300 hover:border-zinc-600 md:p-8">
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-baseline sm:justify-between">
-              <p className="flex items-center gap-2 text-xs font-medium uppercase tracking-normal text-zinc-500">
-                <Calendar className="h-3.5 w-3.5" aria-hidden="true" />
-                {item.period}
-              </p>
-              {item.location && (
-                <p className="flex items-center gap-1 text-xs text-zinc-500">
-                  <MapPin className="h-3 w-3" aria-hidden="true" />
-                  {item.location}
+          <Card>
+            <div className="p-6 md:p-8">
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-baseline sm:justify-between">
+                <p className="flex items-center gap-2 text-xs font-medium uppercase tracking-normal text-zinc-500">
+                  <Calendar className="h-3.5 w-3.5" aria-hidden="true" />
+                  {item.period}
                 </p>
-              )}
+                {item.location && (
+                  <p className="flex items-center gap-1 text-xs text-zinc-500">
+                    <MapPin className="h-3 w-3" aria-hidden="true" />
+                    {item.location}
+                  </p>
+                )}
+              </div>
+              <h3 className="card-title-glitch mt-3 font-display text-xl font-semibold tracking-normal text-zinc-100 sm:text-2xl" data-text={item.title}>
+                <span>{item.title}</span>
+              </h3>
+              <p className="mt-1 text-sm font-medium text-zinc-300">{item.company}</p>
+              <p className="mt-4 text-sm leading-7 text-zinc-400">{item.summary}</p>
+              <ul className="mt-5 space-y-2.5 border-t border-zinc-800/80 pt-5">
+                {item.bullets.map((bullet, idx) => (
+                  <li key={idx} className="flex gap-3 text-sm leading-relaxed text-zinc-400">
+                    <span aria-hidden="true" className="mt-2 h-1 w-1 shrink-0 rounded-full bg-zinc-500" />
+                    <span>{bullet}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
-            <h3 className="mt-3 font-display text-xl font-semibold tracking-normal text-zinc-100 sm:text-2xl">
-              {item.title}
-            </h3>
-            <p className="mt-1 text-sm font-medium text-zinc-300">{item.company}</p>
-            <p className="mt-4 text-sm leading-7 text-zinc-400">{item.summary}</p>
-            <ul className="mt-5 space-y-2.5 border-t border-zinc-800/80 pt-5">
-              {item.bullets.map((bullet, idx) => (
-                <li key={idx} className="flex gap-3 text-sm leading-relaxed text-zinc-400">
-                  <span aria-hidden="true" className="mt-2 h-1 w-1 shrink-0 rounded-full bg-zinc-500" />
-                  <span>{bullet}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
+          </Card>
         </TimelineItem>
       ))}
     </TimelineList>
@@ -249,27 +252,29 @@ function EducationCard({ item }: { item: EducationItem }) {
   const Icon = item.icon === "degree" ? GraduationCap : Award;
 
   return (
-    <div className="rounded-lg border border-zinc-800 bg-zinc-950/65 p-6 transition-colors duration-300 hover:border-zinc-600 md:p-8">
-      <div className="flex items-start gap-4">
-        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-zinc-700 bg-zinc-950 text-zinc-300">
-          <Icon className="h-5 w-5" aria-hidden="true" />
-        </span>
-        <div className="min-w-0 flex-1">
-          <div className="flex flex-col gap-2 sm:flex-row sm:items-baseline sm:justify-between">
-            <p className="text-xs font-medium uppercase tracking-normal text-zinc-500">{item.period}</p>
-            {item.note && (
-              <span className="inline-flex w-fit items-center rounded-full bg-zinc-900 px-2 py-0.5 text-xs font-medium text-zinc-400 ring-1 ring-inset ring-zinc-700/60">
-                {item.note}
-              </span>
-            )}
+    <Card>
+      <div className="p-6 md:p-8">
+        <div className="flex items-start gap-4">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-zinc-700 bg-zinc-950 text-zinc-300">
+            <Icon className="h-5 w-5" aria-hidden="true" />
+          </span>
+          <div className="min-w-0 flex-1">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-baseline sm:justify-between">
+              <p className="text-xs font-medium uppercase tracking-normal text-zinc-500">{item.period}</p>
+              {item.note && (
+                <span className="inline-flex w-fit items-center rounded-full bg-zinc-900 px-2 py-0.5 text-xs font-medium text-zinc-400 ring-1 ring-inset ring-zinc-700/60">
+                  {item.note}
+                </span>
+              )}
+            </div>
+            <h3 className="card-title-glitch mt-2 font-display text-lg font-semibold tracking-normal text-zinc-100 sm:text-xl" data-text={item.name}>
+              <span>{item.name}</span>
+            </h3>
+            <p className="text-sm font-medium text-zinc-300">{item.institution}</p>
+            <p className="mt-3 text-sm leading-relaxed text-zinc-400">{item.detail}</p>
           </div>
-          <h3 className="mt-2 font-display text-lg font-semibold tracking-normal text-zinc-100 sm:text-xl">
-            {item.name}
-          </h3>
-          <p className="text-sm font-medium text-zinc-300">{item.institution}</p>
-          <p className="mt-3 text-sm leading-relaxed text-zinc-400">{item.detail}</p>
         </div>
       </div>
-    </div>
+    </Card>
   );
 }

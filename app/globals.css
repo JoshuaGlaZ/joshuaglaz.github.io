@@ -38,6 +38,7 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 6rem;
   overflow-x: hidden;
   background: #000;
   color-scheme: dark;
@@ -244,18 +245,10 @@ select {
   animation: glitch-slice-b 2.8s steps(2, end) infinite;
 }
 
-.glitch-nav,
-.glitch-button,
 .glitch-panel {
   position: relative;
 }
 
-.glitch-nav {
-  overflow: hidden;
-}
-
-.glitch-nav::after,
-.glitch-button::after,
 .glitch-panel::after {
   content: "";
   pointer-events: none;
@@ -263,18 +256,6 @@ select {
   inset: 0;
   border-radius: inherit;
   opacity: 0;
-}
-
-.glitch-nav::after,
-.glitch-button::after {
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.16), transparent);
-  transform: translateX(-120%);
-}
-
-.glitch-nav:hover::after,
-.glitch-button:hover::after {
-  opacity: 1;
-  animation: glitch-button-shift 900ms steps(3, end);
 }
 
 .glitch-panel::after {
@@ -327,10 +308,7 @@ select {
   74% { clip-path: inset(46% 0 33% 0); transform: translate(1px, 0); opacity: 0.5; }
 }
 
-@keyframes glitch-button-shift {
-  0% { transform: translateX(-120%); }
-  100% { transform: translateX(120%); }
-}
+/* glitch-button-shift animation removed */
 
 @keyframes panel-interference {
   0% { transform: translateY(-12%); }

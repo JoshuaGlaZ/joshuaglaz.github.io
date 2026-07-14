@@ -65,7 +65,7 @@ export default async function BlogPostPage({
 					eyebrow={`GSoC log / week ${post.week}`}
 					title={post.title}
 					description={post.description}
-					meta={[dateStr, "GSoC 2024", "noWorkflow", "MDX source"]}
+					meta={[dateStr, "GSoC 2024", "noWorkflow"]}
 					compact
 					className="mb-12"
 					showSwarm={true}

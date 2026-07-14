@@ -58,7 +58,7 @@ export default function ProjectsClient({ projects }: ProjectsClientProps) {
           eyebrow="Project index / filtered work"
           title="Projects"
           description="Backend, applied-ML, open-source, and product-oriented builds with enough detail to evaluate the engineering work."
-          meta={[`${projects.length} records`, "derived covers", "mdx source", "searchable"]}
+          meta={[`${projects.length} projects`]}
           compact
           className="mb-10"
           minimal={true}

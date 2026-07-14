@@ -84,7 +84,7 @@ export default async function ProjectPage({
 								href={repoLink}
 								target="_blank"
 								rel="noreferrer"
-								className="glitch-button inline-flex items-center gap-2 rounded-full bg-zinc-100 px-4 py-2 text-xs font-semibold uppercase tracking-normal text-zinc-950 transition hover:bg-white"
+								className="inline-flex items-center gap-2 rounded-full bg-zinc-100 px-4 py-2 text-xs font-semibold uppercase tracking-normal text-zinc-950 transition hover:bg-white"
 							>
 								<Github className="h-4 w-4" aria-hidden="true" />
 								Repository
@@ -95,7 +95,7 @@ export default async function ProjectPage({
 								href={project.url}
 								target="_blank"
 								rel="noreferrer"
-								className="glitch-button inline-flex items-center gap-2 rounded-full border border-zinc-700 px-4 py-2 text-xs font-semibold uppercase tracking-normal text-zinc-200 transition hover:border-zinc-400 hover:text-white"
+								className="inline-flex items-center gap-2 rounded-full border border-zinc-700 px-4 py-2 text-xs font-semibold uppercase tracking-normal text-zinc-200 transition hover:border-zinc-400 hover:text-white"
 							>
 								Live link
 								<ArrowUpRight className="h-4 w-4" aria-hidden="true" />

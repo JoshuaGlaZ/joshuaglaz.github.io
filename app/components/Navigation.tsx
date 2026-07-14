@@ -9,8 +9,7 @@ import { motion } from "framer-motion";
 const links = [
   { name: "About", href: "/#about", id: "about" },
   { name: "Experience", href: "/#experience", id: "experience" },
-  { name: "Projects", href: "/#projects", id: "projects" },
-  { name: "Writing", href: "/#blog", id: "blog" }
+  { name: "Projects", href: "/#projects", id: "projects" }
 ];
 
 export default function Navigation() {
@@ -28,7 +27,7 @@ export default function Navigation() {
 
     const handleScroll = () => {
       const spyLineY = window.innerHeight * 0.38;
-      const sections = ["about", "experience", "projects", "blog"];
+      const sections = ["about", "experience", "projects"];
       const hero = document.getElementById("hero");
 
       if (hero && hero.getBoundingClientRect().bottom > spyLineY) {
@@ -53,18 +52,18 @@ export default function Navigation() {
   }, [pathname]);
 
   return (
-    <header className="fixed inset-x-0 top-4 z-50 flex animate-fade-in justify-center px-4 sm:top-6">
+    <header className="fixed inset-x-0 top-4 z-40 flex animate-fade-in justify-center px-4 sm:top-6">
       <nav
         aria-label="Primary"
-        className="glitch-nav flex w-auto max-w-[calc(100vw-2rem)] items-center gap-1 rounded-full border border-zinc-800 bg-black/70 p-1.5 shadow-[0_12px_40px_rgba(0,0,0,0.42)] backdrop-blur-xl overflow-hidden"
+        className="flex w-auto max-w-[calc(100vw-1.5rem)] items-center gap-2 rounded-full border border-zinc-700/70 bg-zinc-950/70 p-1.5 shadow-[0_8px_30px_rgba(0,0,0,0.45)] backdrop-blur-xl md:gap-1 md:px-3"
       >
         <Link
           href="/#top"
           aria-label="Home"
-          className="ml-1 flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full border border-zinc-700 bg-zinc-950 text-zinc-100 transition hover:border-zinc-400 sm:h-9 sm:w-9"
+          className="ml-1 flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full border border-zinc-700 bg-zinc-900/80 text-zinc-100 transition hover:border-zinc-400 hover:text-white sm:h-9 sm:w-9"
         >
           <Image
-            src="/blackhole.png"
+            src="/logo.png"
             alt=""
             width={30}
             height={30}
@@ -80,14 +79,14 @@ export default function Navigation() {
               <li key={link.name} className="relative">
                 <Link
                   href={link.href}
-                  className={`relative z-10 block rounded-full px-4 py-2 text-xs font-medium uppercase tracking-normal transition-colors duration-200 ${
+                  className={`relative z-10 block rounded-full px-3 py-1.5 text-[11px] font-medium uppercase tracking-[0.18em] transition-colors duration-200 sm:px-4 sm:py-2 sm:text-xs ${
                     isActive ? "text-zinc-100" : "text-zinc-400 hover:text-zinc-100"
                   }`}
                 >
                   {isActive && (
                     <motion.span
                       layoutId="nav-pill"
-                      className="absolute inset-0 -z-10 rounded-full bg-zinc-800/85 ring-1 ring-zinc-700/70"
+                      className="absolute inset-0 -z-10 rounded-full bg-zinc-800/80 ring-1 ring-zinc-700/60"
                       transition={{ type: "spring", stiffness: 380, damping: 30 }}
                     />
                   )}
@@ -100,7 +99,7 @@ export default function Navigation() {
 
         <Link
           href="/#contact"
-          className="glitch-button shrink-0 rounded-full bg-zinc-100 px-4 py-2 text-xs font-semibold uppercase tracking-normal text-zinc-950 transition hover:bg-white md:ml-1"
+          className="shrink-0 rounded-full bg-zinc-100 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-zinc-900 transition hover:bg-white md:ml-1 sm:px-4 sm:py-2 sm:text-xs"
         >
           Contact
         </Link>
