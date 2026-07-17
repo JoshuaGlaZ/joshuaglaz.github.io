@@ -1,0 +1,43 @@
+---
+title: "IndoGist"
+description: An Indonesian news summarization web application utilizing Hybrid BiLSTM-NER and traditional TF-IDF algorithms, featuring real-time entity visualization and user customization.
+repository: JoshuaGlaZ/indogist
+date: "2026-05-15"
+published: true
+---
+
+IndoGist is a Django-based web application designed for automatic summarization of Indonesian news articles. It offers two distinct approaches: a Hybrid BiLSTM-NER sequence-labeling method and a traditional statistical TF-IDF model. The application features a detailed visualizer for named entities (Person, Organization, Location) and comparative analytics.
+
+- **Hybrid Pipeline**: Combines sentence-level statistics, title similarity, sentence position, term frequency, aggregation score, entity count, and entity density to select the most representative summary sentences.
+- **BiLSTM-NER Tagging**: Custom named entity recognition trained using BIO tagging, padding, and confidence score calculation to identify and visualize critical entities (Persons, Organizations, Locations) within the summarized text.
+- **Statistical & ML Comparison**: Side-by-side comparison of Traditional (TF-IDF) vs Hybrid (BiLSTM-NER) summaries, with compression ratios ranging from 10% to 50%.
+- **User Analytics Dashboard**: Deep-dive charts showing model training history, classification reports, hyperparameter configurations, and model loss/accuracy metrics.
+- **Data Export & Dataset Contributions**: Features history logs per user, TXT export capability, and tools to export annotations directly to the IndoSum JSONL dataset format.
+
+## Tech Stack
+- **Backend & Web**: Django, Python
+- **Machine Learning**: TensorFlow, Keras, scikit-learn
+- **NLP / Text Processing**: NLTK, Sastrawi, Regex
+- **Frontend / Data Viz**: Chart.js, HTML, CSS (Bootstrap), JavaScript
+- **Data Tools**: NumPy, Pandas, JSONL
+
+## Installation
+
+1. Clone repository:
+```bash
+git clone https://github.com/JoshuaGlaZ/indogist.git
+cd indogist
+```
+
+2. Set up virtual environment and install dependencies:
+```bash
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+pip install -r requirements.txt
+```
+
+3. Run migrations and start development server:
+```bash
+python manage.py migrate
+python manage.py runserver
+```

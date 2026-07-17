@@ -1,4 +1,4 @@
-﻿import fs from "fs";
+import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 import { marked } from "marked";
@@ -14,6 +14,7 @@ export interface ProjectData {
   summaryTags: string[];
   tags?: string[];
   published?: boolean;
+  featured?: boolean;
   contentHtml: string;
 }
 
@@ -96,6 +97,7 @@ export function getProjects(): ProjectData[] {
       summaryTags: getSummaryTags(data, content),
       tags: data.tags || [],
       published: data.published ?? true,
+      featured: data.featured ?? false,
       contentHtml: marked.parse(content) as string
     });
   }

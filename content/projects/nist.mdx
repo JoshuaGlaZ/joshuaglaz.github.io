@@ -1,0 +1,42 @@
+---
+title: "NIST Genesis"
+description: A cloud-oriented predictive maintenance and anomaly detection service for industrial sensor data, built with FastAPI and featuring automated webhook workflows.
+repository: JoshuaGlaZ/nist-genesis
+date: "2025-09-15"
+published: true
+---
+
+NIST Genesis is a service-oriented anomaly detection API for predictive maintenance of industrial equipment. Designed to transform exploratory machine learning notebooks into production-ready API services, it implements robust, runtime-configured inference and operational monitoring workflows.
+
+- **FastAPI Service Architecture**: Clean API endpoints for real-time inference, model health checks, and service metrics, built to support cloud-ready environments.
+- **Runtime Inference Configuration**: Decoupled, explicit model configuration allowing seamless updates to the champion model without code changes or hardcoded notebook dependencies.
+- **Idempotent Webhook Integration**: A robust ERP/CMMS webhook integration pattern that avoids duplicate maintenance work orders from redundant device-timestamp alerts.
+- **Production Monitoring**: Pre-configured Prometheus-style operational metrics, health endpoints, and system status checks for model deployment evaluation.
+- **Cloud Deployment Playbook**: Optimized configuration and documentation for cost-effective deployment on AWS Lightsail or lightweight container environments.
+
+## Tech Stack
+- **API Framework**: FastAPI, Uvicorn
+- **Machine Learning**: scikit-learn
+- **Data Science**: NumPy, Pandas, Jupyter Notebook
+- **DevOps & Infrastructure**: Docker, Docker Compose, Prometheus (Metrics)
+- **Deployment**: AWS Lightsail / Cloud-ready configurations
+
+## Installation
+
+1. Clone repository:
+```bash
+git clone https://github.com/JoshuaGlaZ/nist-genesis.git
+cd nist-genesis
+```
+
+2. Set up virtual environment and install dependencies:
+```bash
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+pip install -r requirements.txt
+```
+
+3. Start the FastAPI application:
+```bash
+uvicorn app.main:app --reload
+```

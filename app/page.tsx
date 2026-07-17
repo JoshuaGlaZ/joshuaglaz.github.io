@@ -40,13 +40,14 @@ export default async function Home() {
   const allProjects = getProjects();
   const allBlogs = getGSoCPosts();
 
-  const featuredSlugs = ["stratasearch", "noworkflow", "aria"];
-  const featuredProjects = featuredSlugs
-    .map((slug) => allProjects.find((project) => project.slug === slug))
-    .filter((project): project is (typeof allProjects)[number] => Boolean(project));
+  const featuredProjects = allProjects
+    .filter((project) => project.featured && project.published !== false)
+    .slice(0, 3);
 
   if (featuredProjects.length < 3) {
-    const remaining = allProjects.filter((project) => !featuredSlugs.includes(project.slug));
+    const remaining = allProjects.filter(
+      (project) => !featuredProjects.some((p) => p.slug === project.slug) && project.published !== false
+    );
     featuredProjects.push(...remaining.slice(0, 3 - featuredProjects.length));
   }
 
