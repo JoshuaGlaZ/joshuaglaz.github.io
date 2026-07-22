@@ -69,18 +69,161 @@ interface HeroGlobeProps {
   className?: string;
 }
 
+function start2DCanvasGlobe(container: HTMLElement) {
+  const canvas = document.createElement("canvas");
+  canvas.className = "hero-globe-canvas h-full w-full opacity-80 mix-blend-screen";
+  container.appendChild(canvas);
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return () => {};
+
+  let animId = 0;
+  let disposed = false;
+
+  const phi = (1 + Math.sqrt(5)) / 2;
+  const rawVertices: [number, number, number][] = [
+    [-1, phi, 0], [1, phi, 0], [-1, -phi, 0], [1, -phi, 0],
+    [0, -1, phi], [0, 1, phi], [0, -1, -phi], [0, 1, -phi],
+    [phi, 0, -1], [phi, 0, 1], [-phi, 0, -1], [-phi, 0, 1]
+  ];
+
+  const scale = 110;
+  const vertices = rawVertices.map(([x, y, z]) => {
+    const len = Math.sqrt(x * x + y * y + z * z);
+    return [(x / len) * scale, (y / len) * scale, (z / len) * scale] as [number, number, number];
+  });
+
+  const edges: [number, number][] = [];
+  for (let i = 0; i < vertices.length; i++) {
+    for (let j = i + 1; j < vertices.length; j++) {
+      const dx = vertices[i][0] - vertices[j][0];
+      const dy = vertices[i][1] - vertices[j][1];
+      const dz = vertices[i][2] - vertices[j][2];
+      const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
+      if (Math.abs(dist - 115.6) < 20) {
+        edges.push([i, j]);
+      }
+    }
+  }
+
+  const ringPoints: [number, number, number][] = [];
+  const ringSegments = 64;
+  for (let i = 0; i < ringSegments; i++) {
+    const angle = (i / ringSegments) * Math.PI * 2;
+    ringPoints.push([145 * Math.cos(angle), 145 * Math.sin(angle), 0]);
+  }
+
+  let rotZ = 0;
+  let rotX = 0.4;
+
+  function resize() {
+    if (!container) return;
+    const w = Math.max(container.clientWidth, 200);
+    const h = Math.max(container.clientHeight, 200);
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = w * dpr;
+    canvas.height = h * dpr;
+    canvas.style.width = `${w}px`;
+    canvas.style.height = `${h}px`;
+  }
+
+  resize();
+  window.addEventListener("resize", resize);
+
+  function project(p: [number, number, number], rx: number, ry: number, rz: number, cx: number, cy: number): [number, number] {
+    const [x, y, z] = p;
+    let cos = Math.cos(rx), sin = Math.sin(rx);
+    const y1 = y * cos - z * sin;
+    const z1 = y * sin + z * cos;
+
+    cos = Math.cos(ry); sin = Math.sin(ry);
+    const x2 = x * cos + z1 * sin;
+    const z2 = -x * sin + z1 * cos;
+
+    cos = Math.cos(rz); sin = Math.sin(rz);
+    const x3 = x2 * cos - y1 * sin;
+    const y3 = x2 * sin + y1 * cos;
+
+    const fov = 550;
+    const perspective = fov / (fov + z2 + 260);
+    return [cx + x3 * perspective, cy + y3 * perspective];
+  }
+
+  function render() {
+    if (disposed || !ctx) return;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const width = canvas.width / dpr;
+    const height = canvas.height / dpr;
+    const cx = width / 2;
+    const cy = height / 2;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.save();
+    ctx.scale(dpr, dpr);
+
+    rotZ += 0.007;
+    rotX += 0.003;
+
+    const isGlitching = Math.random() < 0.15;
+    const gOffsetX = isGlitching ? (Math.random() - 0.5) * 12 : 0;
+    const gOffsetY = isGlitching ? (Math.random() - 0.5) * 6 : 0;
+
+    const projVerts = vertices.map(v => project(v, rotX, rotZ * 0.4, rotZ, cx, cy));
+
+    if (isGlitching) {
+      ctx.strokeStyle = "rgba(255, 0, 193, 0.45)";
+      ctx.lineWidth = 1.5;
+      edges.forEach(([i, j]) => {
+        const p1 = projVerts[i];
+        const p2 = projVerts[j];
+        ctx.beginPath();
+        ctx.moveTo(p1[0] + gOffsetX + 2, p1[1] + gOffsetY);
+        ctx.lineTo(p2[0] + gOffsetX + 2, p2[1] + gOffsetY);
+        ctx.stroke();
+      });
+    }
+
+    ctx.strokeStyle = "rgba(244, 244, 245, 0.75)";
+    ctx.lineWidth = 1.2;
+    edges.forEach(([i, j]) => {
+      const p1 = projVerts[i];
+      const p2 = projVerts[j];
+      ctx.beginPath();
+      ctx.moveTo(p1[0], p1[1]);
+      ctx.lineTo(p2[0], p2[1]);
+      ctx.stroke();
+    });
+
+    const projRing = ringPoints.map(p => project(p, rotZ * 0.6, 0.75, rotZ * 0.25, cx, cy));
+    ctx.strokeStyle = "rgba(215, 215, 230, 0.55)";
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    projRing.forEach((p, idx) => {
+      if (idx === 0) ctx.moveTo(p[0], p[1]);
+      else ctx.lineTo(p[0], p[1]);
+    });
+    ctx.closePath();
+    ctx.stroke();
+
+    ctx.restore();
+    animId = requestAnimationFrame(render);
+  }
+
+  render();
+
+  return () => {
+    disposed = true;
+    window.removeEventListener("resize", resize);
+    cancelAnimationFrame(animId);
+    canvas.remove();
+  };
+}
+
 export default function HeroGlobe({ className = "" }: HeroGlobeProps) {
   const hostRef = useRef<HTMLDivElement | null>(null);
-  const [webGlSupported, setWebGlSupported] = useState<boolean>(true);
 
   useEffect(() => {
     const host = hostRef.current;
     if (!host) return;
-
-    if (!isWebGLSupportedByBrowser()) {
-      setWebGlSupported(false);
-      return;
-    }
 
     let disposed = false;
     let frameId = 0;
@@ -91,18 +234,49 @@ export default function HeroGlobe({ className = "" }: HeroGlobeProps) {
     let cleanup = () => {};
 
     async function boot() {
+      const hostElement = hostRef.current;
+      if (!hostElement) return;
+
+      const canvas = document.createElement("canvas");
+      const contextAttributes: WebGLContextAttributes = {
+        antialias: false,
+        alpha: true,
+        depth: false,
+        stencil: false,
+        preserveDrawingBuffer: false,
+        failIfMajorPerformanceCaveat: false,
+        powerPreference: "default"
+      };
+
+      let glContext: WebGLRenderingContext | null = null;
       try {
-        await loadGlobeScripts();
-      } catch (err) {
-        console.warn("HeroGlobe: Failed to load 3D scripts, engaging fallback:", err);
-        setWebGlSupported(false);
+        glContext = (canvas.getContext("webgl", contextAttributes) ||
+                     canvas.getContext("experimental-webgl", contextAttributes) ||
+                     canvas.getContext("webgl2", contextAttributes)) as WebGLRenderingContext | null;
+      } catch {
+        glContext = null;
+      }
+
+      if (!glContext || (typeof glContext.isContextLost === "function" && glContext.isContextLost())) {
+        console.warn("HeroGlobe: WebGL context unavailable. Engaging 2D canvas 3D fallback.");
+        cleanup = start2DCanvasGlobe(hostElement);
         return;
       }
 
-      if (disposed || !hostRef.current || !window.THREE) return;
+      try {
+        await loadGlobeScripts();
+      } catch (err) {
+        console.warn("HeroGlobe: Failed to load 3D scripts. Engaging 2D canvas 3D fallback:", err);
+        cleanup = start2DCanvasGlobe(hostElement);
+        return;
+      }
+
+      if (disposed || !hostRef.current || !window.THREE) {
+        cleanup = start2DCanvasGlobe(hostElement);
+        return;
+      }
 
       const THREE = window.THREE;
-      const hostElement = hostRef.current;
       const scene = new THREE.Scene();
       const camera = new THREE.PerspectiveCamera(20, 1, 1, 10000);
       const light = new THREE.DirectionalLight(0xffffff);
@@ -139,6 +313,8 @@ export default function HeroGlobe({ className = "" }: HeroGlobeProps) {
       let renderer: any = null;
       try {
         renderer = new THREE.WebGLRenderer({
+          canvas,
+          context: glContext,
           antialias: false,
           alpha: true,
           depth: false,
@@ -146,21 +322,13 @@ export default function HeroGlobe({ className = "" }: HeroGlobeProps) {
           preserveDrawingBuffer: false
         });
       } catch (err) {
-        console.warn("HeroGlobe: WebGLRenderer context creation failed, engaging fallback:", err);
-        setWebGlSupported(false);
+        console.warn("HeroGlobe: WebGLRenderer creation error, engaging 2D canvas fallback:", err);
+        cleanup = start2DCanvasGlobe(hostElement);
         return;
       }
 
       if (!renderer || !renderer.domElement) {
-        setWebGlSupported(false);
-        return;
-      }
-
-      const glContext = renderer.getContext?.();
-      if (!glContext || (typeof glContext.isContextLost === "function" && glContext.isContextLost())) {
-        console.warn("HeroGlobe: WebGL context lost or uninitialized.");
-        renderer.dispose?.();
-        setWebGlSupported(false);
+        cleanup = start2DCanvasGlobe(hostElement);
         return;
       }
 
@@ -169,7 +337,10 @@ export default function HeroGlobe({ className = "" }: HeroGlobeProps) {
         event.preventDefault();
         if (frameId) window.cancelAnimationFrame(frameId);
         disposed = true;
-        setWebGlSupported(false);
+        cleanup();
+        if (hostRef.current) {
+          cleanup = start2DCanvasGlobe(hostRef.current);
+        }
       };
       canvasElement.addEventListener("webglcontextlost", handleContextLost, false);
 
@@ -299,7 +470,9 @@ export default function HeroGlobe({ className = "" }: HeroGlobeProps) {
 
     boot().catch((err) => {
       console.warn("HeroGlobe boot exception handled:", err);
-      setWebGlSupported(false);
+      if (hostRef.current) {
+        cleanup = start2DCanvasGlobe(hostRef.current);
+      }
     });
 
     return () => {
@@ -307,14 +480,6 @@ export default function HeroGlobe({ className = "" }: HeroGlobeProps) {
       cleanup();
     };
   }, []);
-
-  if (!webGlSupported) {
-    return (
-      <div className={`${className} flex items-center justify-center`} aria-hidden="true">
-        <div className="h-64 w-64 rounded-full bg-gradient-to-tr from-zinc-800/30 via-zinc-600/10 to-transparent blur-2xl animate-pulse" />
-      </div>
-    );
-  }
 
   return <div ref={hostRef} className={className} aria-hidden="true" />;
 }
