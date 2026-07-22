@@ -78,16 +78,14 @@ interface HeroGlobeProps {
 
 export default function HeroGlobe({ className = "" }: HeroGlobeProps) {
   const hostRef = useRef<HTMLDivElement | null>(null);
-  const [webGlSupported, setWebGlSupported] = useState<boolean>(true);
+  const [webGlSupported, setWebGlSupported] = useState<boolean>(() => {
+    if (typeof window === "undefined") return true;
+    return isWebGLAvailable();
+  });
 
   useEffect(() => {
     const host = hostRef.current;
-    if (!host) return;
-
-    if (!isWebGLAvailable()) {
-      setWebGlSupported(false);
-      return;
-    }
+    if (!host || !webGlSupported) return;
 
     let disposed = false;
     let frameId = 0;
@@ -136,6 +134,7 @@ export default function HeroGlobe({ className = "" }: HeroGlobeProps) {
       const ring = new THREE.Mesh(ringGeometry, ringMaterial);
       scene.add(ring);
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let renderer: any = null;
       try {
         renderer = new THREE.WebGLRenderer({
@@ -306,7 +305,7 @@ export default function HeroGlobe({ className = "" }: HeroGlobeProps) {
       disposed = true;
       cleanup();
     };
-  }, []);
+  }, [webGlSupported]);
 
   if (!webGlSupported) {
     return (

@@ -7,11 +7,12 @@ const eslintConfig = defineConfig([
   ...nextTs,
   // Override default ignores of eslint-config-next.
   globalIgnores([
-    // Default ignores of eslint-config-next:
     ".next/**",
     "out/**",
     "build/**",
-    "public/glitch-globe/libs/**",
+    "public/**",
+    "glitch-effects-knowledge/**",
+    "misc-ui-effects-knowledge/**",
     "next-env.d.ts",
   ]),
 ]);
