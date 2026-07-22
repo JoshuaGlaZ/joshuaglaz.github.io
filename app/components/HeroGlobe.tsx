@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 declare global {
   interface Window {
@@ -24,6 +24,18 @@ const scripts = [
 ];
 
 let globeScriptPromise: Promise<void> | null = null;
+
+function isWebGLAvailable(): boolean {
+  try {
+    const canvas = document.createElement("canvas");
+    return Boolean(
+      window.WebGLRenderingContext &&
+        (canvas.getContext("webgl") || canvas.getContext("experimental-webgl"))
+    );
+  } catch {
+    return false;
+  }
+}
 
 function loadScript(src: string) {
   const existing = document.querySelector<HTMLScriptElement>(`script[data-hero-globe="${src}"]`);
@@ -66,10 +78,16 @@ interface HeroGlobeProps {
 
 export default function HeroGlobe({ className = "" }: HeroGlobeProps) {
   const hostRef = useRef<HTMLDivElement | null>(null);
+  const [webGlSupported, setWebGlSupported] = useState<boolean>(true);
 
   useEffect(() => {
     const host = hostRef.current;
     if (!host) return;
+
+    if (!isWebGLAvailable()) {
+      setWebGlSupported(false);
+      return;
+    }
 
     let disposed = false;
     let frameId = 0;
@@ -118,14 +136,43 @@ export default function HeroGlobe({ className = "" }: HeroGlobeProps) {
       const ring = new THREE.Mesh(ringGeometry, ringMaterial);
       scene.add(ring);
 
-      const renderer = new THREE.WebGLRenderer({
-        antialias: false,
-        alpha: true,
-        depth: false,
-        stencil: false,
-        preserveDrawingBuffer: false,
-        powerPreference: "low-power"
-      });
+      let renderer: any = null;
+      try {
+        renderer = new THREE.WebGLRenderer({
+          antialias: false,
+          alpha: true,
+          depth: false,
+          stencil: false,
+          preserveDrawingBuffer: false
+        });
+      } catch (err) {
+        console.warn("HeroGlobe: WebGLRenderer context creation failed, engaging fallback:", err);
+        setWebGlSupported(false);
+        return;
+      }
+
+      if (!renderer || !renderer.domElement) {
+        setWebGlSupported(false);
+        return;
+      }
+
+      const glContext = renderer.getContext?.();
+      if (!glContext || (typeof glContext.isContextLost === "function" && glContext.isContextLost())) {
+        console.warn("HeroGlobe: WebGL context lost or uninitialized.");
+        renderer.dispose?.();
+        setWebGlSupported(false);
+        return;
+      }
+
+      const canvasElement = renderer.domElement;
+      const handleContextLost = (event: Event) => {
+        event.preventDefault();
+        if (frameId) window.cancelAnimationFrame(frameId);
+        disposed = true;
+        setWebGlSupported(false);
+      };
+      canvasElement.addEventListener("webglcontextlost", handleContextLost, false);
+
       renderer.setClearColor(0x000000, 0);
       renderer.setPixelRatio(1);
       renderer.domElement.className = "hero-globe-canvas h-full w-full";
@@ -230,6 +277,7 @@ export default function HeroGlobe({ className = "" }: HeroGlobeProps) {
 
       document.addEventListener("visibilitychange", handleVisibilityChange);
       cleanup = () => {
+        canvasElement?.removeEventListener("webglcontextlost", handleContextLost);
         globalThis.removeEventListener("resize", resize);
         document.removeEventListener("visibilitychange", handleVisibilityChange);
         resizeObserver?.disconnect();
@@ -245,17 +293,28 @@ export default function HeroGlobe({ className = "" }: HeroGlobeProps) {
         sphere.dispose?.();
         ringGeometry.dispose?.();
         ringMaterial.dispose?.();
-        renderer.domElement.remove();
+        renderer.domElement?.remove();
       };
     }
 
-    boot().catch(() => {});
+    boot().catch((err) => {
+      console.warn("HeroGlobe boot exception handled:", err);
+      setWebGlSupported(false);
+    });
 
     return () => {
       disposed = true;
       cleanup();
     };
   }, []);
+
+  if (!webGlSupported) {
+    return (
+      <div className={`${className} flex items-center justify-center`} aria-hidden="true">
+        <div className="h-64 w-64 rounded-full bg-gradient-to-tr from-zinc-800/30 via-zinc-600/10 to-transparent blur-2xl animate-pulse" />
+      </div>
+    );
+  }
 
   return <div ref={hostRef} className={className} aria-hidden="true" />;
 }
