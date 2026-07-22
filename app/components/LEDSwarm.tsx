@@ -32,15 +32,24 @@ class LEDSwarmRenderer {
 
   constructor(canvasElement: HTMLCanvasElement) {
     this.canvas = canvasElement;
-    this.gl = this.canvas.getContext("webgl", {
-      antialias: false,
-      alpha: false,
-      depth: false,
-      stencil: false,
-      preserveDrawingBuffer: false,
-      powerPreference: "low-power"
-    });
+    try {
+      this.gl = this.canvas.getContext("webgl", {
+        antialias: false,
+        alpha: false,
+        depth: false,
+        stencil: false,
+        preserveDrawingBuffer: false,
+        powerPreference: "low-power"
+      });
+    } catch {
+      this.gl = null;
+    }
     if (!this.gl) return;
+
+    this.canvas.addEventListener("webglcontextlost", (event: Event) => {
+      event.preventDefault();
+      this.stop();
+    }, false);
 
     this.resize = this.resize.bind(this);
     this.render = this.render.bind(this);

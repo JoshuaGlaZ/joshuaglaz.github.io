@@ -25,16 +25,9 @@ const scripts = [
 
 let globeScriptPromise: Promise<void> | null = null;
 
-function isWebGLAvailable(): boolean {
-  try {
-    const canvas = document.createElement("canvas");
-    return Boolean(
-      window.WebGLRenderingContext &&
-        (canvas.getContext("webgl") || canvas.getContext("experimental-webgl"))
-    );
-  } catch {
-    return false;
-  }
+function isWebGLSupportedByBrowser(): boolean {
+  if (typeof window === "undefined") return false;
+  return typeof window.WebGLRenderingContext !== "undefined";
 }
 
 function loadScript(src: string) {
@@ -78,14 +71,16 @@ interface HeroGlobeProps {
 
 export default function HeroGlobe({ className = "" }: HeroGlobeProps) {
   const hostRef = useRef<HTMLDivElement | null>(null);
-  const [webGlSupported, setWebGlSupported] = useState<boolean>(() => {
-    if (typeof window === "undefined") return true;
-    return isWebGLAvailable();
-  });
+  const [webGlSupported, setWebGlSupported] = useState<boolean>(true);
 
   useEffect(() => {
     const host = hostRef.current;
-    if (!host || !webGlSupported) return;
+    if (!host) return;
+
+    if (!isWebGLSupportedByBrowser()) {
+      setWebGlSupported(false);
+      return;
+    }
 
     let disposed = false;
     let frameId = 0;
@@ -96,7 +91,13 @@ export default function HeroGlobe({ className = "" }: HeroGlobeProps) {
     let cleanup = () => {};
 
     async function boot() {
-      await loadGlobeScripts();
+      try {
+        await loadGlobeScripts();
+      } catch (err) {
+        console.warn("HeroGlobe: Failed to load 3D scripts, engaging fallback:", err);
+        setWebGlSupported(false);
+        return;
+      }
 
       if (disposed || !hostRef.current || !window.THREE) return;
 
@@ -305,7 +306,7 @@ export default function HeroGlobe({ className = "" }: HeroGlobeProps) {
       disposed = true;
       cleanup();
     };
-  }, [webGlSupported]);
+  }, []);
 
   if (!webGlSupported) {
     return (
