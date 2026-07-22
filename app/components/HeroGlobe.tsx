@@ -389,7 +389,7 @@ export default function HeroGlobe({ className = "" }: HeroGlobeProps) {
   }, []);
 
   return (
-    <div ref={hostRef} className={`relative ${className}`} aria-hidden="true">
+    <div ref={hostRef} className={className} aria-hidden="true">
       {isLoading && <RetroGlitchLoader />}
     </div>
   );
