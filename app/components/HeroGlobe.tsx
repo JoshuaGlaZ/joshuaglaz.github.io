@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
 declare global {
   interface Window {
@@ -24,11 +24,6 @@ const scripts = [
 ];
 
 let globeScriptPromise: Promise<void> | null = null;
-
-function isWebGLSupportedByBrowser(): boolean {
-  if (typeof window === "undefined") return false;
-  return typeof window.WebGLRenderingContext !== "undefined";
-}
 
 function loadScript(src: string) {
   const existing = document.querySelector<HTMLScriptElement>(`script[data-hero-globe="${src}"]`);
