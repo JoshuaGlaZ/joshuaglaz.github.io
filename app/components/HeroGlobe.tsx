@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 declare global {
   interface Window {
@@ -51,9 +51,12 @@ function loadScript(src: string) {
 
 function loadGlobeScripts() {
   if (!globeScriptPromise) {
-    globeScriptPromise = scripts.reduce(
-      (chain, src) => chain.then(() => loadScript(src)),
-      Promise.resolve()
+    const mainScript = scripts[0];
+    const extensionScripts = scripts.slice(1);
+
+    // Load Three.js core first, then all 9 shader extensions in parallel
+    globeScriptPromise = loadScript(mainScript).then(() =>
+      Promise.all(extensionScripts.map(loadScript)).then(() => {})
     );
   }
 
@@ -64,157 +67,63 @@ interface HeroGlobeProps {
   className?: string;
 }
 
-function start2DCanvasGlobe(container: HTMLElement) {
-  const canvas = document.createElement("canvas");
-  canvas.className = "hero-globe-canvas h-full w-full opacity-80 mix-blend-screen";
-  container.appendChild(canvas);
-  const ctx = canvas.getContext("2d");
-  if (!ctx) return () => {};
+function RetroGlitchLoader() {
+  const [telemetry, setTelemetry] = useState("INIT_SIGNAL...");
 
-  let animId = 0;
-  let disposed = false;
+  useEffect(() => {
+    const logs = [
+      "ACQUIRING_ORBITAL_NODES",
+      "COMPILING_GEOMETRY_BUFFER",
+      "APPLYING_GLITCH_SHADERS",
+      "SIGNAL_STRENGTH: 98.4%",
+      "ORBITAL_READY"
+    ];
+    let idx = 0;
+    const interval = setInterval(() => {
+      idx = (idx + 1) % logs.length;
+      setTelemetry(logs[idx]);
+    }, 450);
 
-  const phi = (1 + Math.sqrt(5)) / 2;
-  const rawVertices: [number, number, number][] = [
-    [-1, phi, 0], [1, phi, 0], [-1, -phi, 0], [1, -phi, 0],
-    [0, -1, phi], [0, 1, phi], [0, -1, -phi], [0, 1, -phi],
-    [phi, 0, -1], [phi, 0, 1], [-phi, 0, -1], [-phi, 0, 1]
-  ];
+    return () => clearInterval(interval);
+  }, []);
 
-  const scale = 110;
-  const vertices = rawVertices.map(([x, y, z]) => {
-    const len = Math.sqrt(x * x + y * y + z * z);
-    return [(x / len) * scale, (y / len) * scale, (z / len) * scale] as [number, number, number];
-  });
+  return (
+    <div className="pointer-events-none absolute inset-0 flex items-center justify-center font-mono">
+      {/* Retro Surveillance CRT Frame */}
+      <div className="relative flex h-56 w-56 flex-col items-center justify-center rounded-lg border border-cyan-500/30 bg-black/60 p-4 shadow-[0_0_25px_rgba(0,255,249,0.15)] backdrop-blur-sm">
+        {/* Corner HUD Brackets */}
+        <div className="absolute left-2 top-2 h-4 w-4 border-l-2 border-t-2 border-cyan-400" />
+        <div className="absolute right-2 top-2 h-4 w-4 border-r-2 border-t-2 border-cyan-400" />
+        <div className="absolute bottom-2 left-2 h-4 w-4 border-b-2 border-l-2 border-cyan-400" />
+        <div className="absolute bottom-2 right-2 h-4 w-4 border-b-2 border-r-2 border-cyan-400" />
 
-  const edges: [number, number][] = [];
-  for (let i = 0; i < vertices.length; i++) {
-    for (let j = i + 1; j < vertices.length; j++) {
-      const dx = vertices[i][0] - vertices[j][0];
-      const dy = vertices[i][1] - vertices[j][1];
-      const dz = vertices[i][2] - vertices[j][2];
-      const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
-      if (Math.abs(dist - 115.6) < 20) {
-        edges.push([i, j]);
-      }
-    }
-  }
+        {/* CRT Scanline Overlay */}
+        <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.35)_50%)] bg-[length:100%_4px] opacity-70" />
 
-  const ringPoints: [number, number, number][] = [];
-  const ringSegments = 64;
-  for (let i = 0; i < ringSegments; i++) {
-    const angle = (i / ringSegments) * Math.PI * 2;
-    ringPoints.push([145 * Math.cos(angle), 145 * Math.sin(angle), 0]);
-  }
+        {/* Central Targeting Reticle */}
+        <div className="relative mb-3 flex h-16 w-16 items-center justify-center">
+          <div className="absolute inset-0 animate-spin rounded-full border border-dashed border-cyan-400/40 duration-3000" />
+          <div className="h-8 w-8 animate-ping rounded-full border border-pink-500/40" />
+          <div className="h-2 w-2 rounded-full bg-cyan-400" />
+        </div>
 
-  let rotZ = 0;
-  let rotX = 0.4;
-
-  function resize() {
-    if (!container) return;
-    const w = Math.max(container.clientWidth, 200);
-    const h = Math.max(container.clientHeight, 200);
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    canvas.width = w * dpr;
-    canvas.height = h * dpr;
-    canvas.style.width = `${w}px`;
-    canvas.style.height = `${h}px`;
-  }
-
-  resize();
-  window.addEventListener("resize", resize);
-
-  function project(p: [number, number, number], rx: number, ry: number, rz: number, cx: number, cy: number): [number, number] {
-    const [x, y, z] = p;
-    let cos = Math.cos(rx), sin = Math.sin(rx);
-    const y1 = y * cos - z * sin;
-    const z1 = y * sin + z * cos;
-
-    cos = Math.cos(ry); sin = Math.sin(ry);
-    const x2 = x * cos + z1 * sin;
-    const z2 = -x * sin + z1 * cos;
-
-    cos = Math.cos(rz); sin = Math.sin(rz);
-    const x3 = x2 * cos - y1 * sin;
-    const y3 = x2 * sin + y1 * cos;
-
-    const fov = 550;
-    const perspective = fov / (fov + z2 + 260);
-    return [cx + x3 * perspective, cy + y3 * perspective];
-  }
-
-  function render() {
-    if (disposed || !ctx) return;
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    const width = canvas.width / dpr;
-    const height = canvas.height / dpr;
-    const cx = width / 2;
-    const cy = height / 2;
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.save();
-    ctx.scale(dpr, dpr);
-
-    rotZ += 0.007;
-    rotX += 0.003;
-
-    const isGlitching = Math.random() < 0.15;
-    const gOffsetX = isGlitching ? (Math.random() - 0.5) * 12 : 0;
-    const gOffsetY = isGlitching ? (Math.random() - 0.5) * 6 : 0;
-
-    const projVerts = vertices.map(v => project(v, rotX, rotZ * 0.4, rotZ, cx, cy));
-
-    if (isGlitching) {
-      ctx.strokeStyle = "rgba(255, 0, 193, 0.45)";
-      ctx.lineWidth = 1.5;
-      edges.forEach(([i, j]) => {
-        const p1 = projVerts[i];
-        const p2 = projVerts[j];
-        ctx.beginPath();
-        ctx.moveTo(p1[0] + gOffsetX + 2, p1[1] + gOffsetY);
-        ctx.lineTo(p2[0] + gOffsetX + 2, p2[1] + gOffsetY);
-        ctx.stroke();
-      });
-    }
-
-    ctx.strokeStyle = "rgba(244, 244, 245, 0.75)";
-    ctx.lineWidth = 1.2;
-    edges.forEach(([i, j]) => {
-      const p1 = projVerts[i];
-      const p2 = projVerts[j];
-      ctx.beginPath();
-      ctx.moveTo(p1[0], p1[1]);
-      ctx.lineTo(p2[0], p2[1]);
-      ctx.stroke();
-    });
-
-    const projRing = ringPoints.map(p => project(p, rotZ * 0.6, 0.75, rotZ * 0.25, cx, cy));
-    ctx.strokeStyle = "rgba(215, 215, 230, 0.55)";
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    projRing.forEach((p, idx) => {
-      if (idx === 0) ctx.moveTo(p[0], p[1]);
-      else ctx.lineTo(p[0], p[1]);
-    });
-    ctx.closePath();
-    ctx.stroke();
-
-    ctx.restore();
-    animId = requestAnimationFrame(render);
-  }
-
-  render();
-
-  return () => {
-    disposed = true;
-    window.removeEventListener("resize", resize);
-    cancelAnimationFrame(animId);
-    canvas.remove();
-  };
+        {/* Retro RGB Split Text HUD */}
+        <div className="relative text-center">
+          <p className="text-[10px] font-bold tracking-widest text-cyan-400 drop-shadow-[0_0_8px_rgba(0,255,249,0.8)]">
+            SYS.INIT // GLOBE_3D
+          </p>
+          <p className="mt-1 text-[9px] tracking-wider text-pink-400/90 animate-pulse">
+            [{telemetry}]
+          </p>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default function HeroGlobe({ className = "" }: HeroGlobeProps) {
   const hostRef = useRef<HTMLDivElement | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const host = hostRef.current;
@@ -230,7 +139,7 @@ export default function HeroGlobe({ className = "" }: HeroGlobeProps) {
 
     async function boot() {
       const hostElement = hostRef.current;
-      if (!hostElement) return;
+      if (!hostElement || disposed) return;
 
       const canvas = document.createElement("canvas");
       const contextAttributes: WebGLContextAttributes = {
@@ -253,21 +162,21 @@ export default function HeroGlobe({ className = "" }: HeroGlobeProps) {
       }
 
       if (!glContext || (typeof glContext.isContextLost === "function" && glContext.isContextLost())) {
-        console.warn("HeroGlobe: WebGL context unavailable. Engaging 2D canvas 3D fallback.");
-        cleanup = start2DCanvasGlobe(hostElement);
+        console.warn("HeroGlobe: WebGL context unavailable.");
+        setIsLoading(false);
         return;
       }
 
       try {
         await loadGlobeScripts();
       } catch (err) {
-        console.warn("HeroGlobe: Failed to load 3D scripts. Engaging 2D canvas 3D fallback:", err);
-        cleanup = start2DCanvasGlobe(hostElement);
+        console.warn("HeroGlobe: Failed to load 3D scripts:", err);
+        setIsLoading(false);
         return;
       }
 
       if (disposed || !hostRef.current || !window.THREE) {
-        cleanup = start2DCanvasGlobe(hostElement);
+        setIsLoading(false);
         return;
       }
 
@@ -317,13 +226,13 @@ export default function HeroGlobe({ className = "" }: HeroGlobeProps) {
           preserveDrawingBuffer: false
         });
       } catch (err) {
-        console.warn("HeroGlobe: WebGLRenderer creation error, engaging 2D canvas fallback:", err);
-        cleanup = start2DCanvasGlobe(hostElement);
+        console.warn("HeroGlobe: WebGLRenderer creation error:", err);
+        setIsLoading(false);
         return;
       }
 
       if (!renderer || !renderer.domElement) {
-        cleanup = start2DCanvasGlobe(hostElement);
+        setIsLoading(false);
         return;
       }
 
@@ -333,15 +242,12 @@ export default function HeroGlobe({ className = "" }: HeroGlobeProps) {
         if (frameId) window.cancelAnimationFrame(frameId);
         disposed = true;
         cleanup();
-        if (hostRef.current) {
-          cleanup = start2DCanvasGlobe(hostRef.current);
-        }
       };
       canvasElement.addEventListener("webglcontextlost", handleContextLost, false);
 
       renderer.setClearColor(0x000000, 0);
       renderer.setPixelRatio(1);
-      renderer.domElement.className = "hero-globe-canvas h-full w-full";
+      renderer.domElement.className = "hero-globe-canvas absolute inset-0 h-full w-full opacity-0 transition-opacity duration-700 ease-out";
       hostElement.appendChild(renderer.domElement);
 
       const composer = new THREE.EffectComposer(renderer);
@@ -421,6 +327,14 @@ export default function HeroGlobe({ className = "" }: HeroGlobeProps) {
       resize();
       requestFrame();
 
+      // Smoothly fade in 3D WebGL canvas and unmount Retro Loader
+      requestAnimationFrame(() => {
+        if (!disposed && renderer?.domElement) {
+          renderer.domElement.classList.replace("opacity-0", "opacity-100");
+          setIsLoading(false);
+        }
+      });
+
       const ResizeObserverConstructor = globalThis.ResizeObserver;
       if (typeof ResizeObserverConstructor === "function") {
         resizeObserver = new ResizeObserverConstructor(() => {
@@ -465,9 +379,7 @@ export default function HeroGlobe({ className = "" }: HeroGlobeProps) {
 
     boot().catch((err) => {
       console.warn("HeroGlobe boot exception handled:", err);
-      if (hostRef.current) {
-        cleanup = start2DCanvasGlobe(hostRef.current);
-      }
+      setIsLoading(false);
     });
 
     return () => {
@@ -476,5 +388,10 @@ export default function HeroGlobe({ className = "" }: HeroGlobeProps) {
     };
   }, []);
 
-  return <div ref={hostRef} className={className} aria-hidden="true" />;
+  return (
+    <div ref={hostRef} className={`relative ${className}`} aria-hidden="true">
+      {isLoading && <RetroGlitchLoader />}
+    </div>
+  );
 }
+
