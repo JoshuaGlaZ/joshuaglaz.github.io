@@ -43,3 +43,4 @@ next-env.d.ts
 # local assets
 /glitch-effects-knowledge
 /icon-asset
+/misc-ui-effects-knowledge
